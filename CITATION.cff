@@ -2,6 +2,7 @@ cff-version: 1.2.0
 title: "Ca-Sr-O thermodynamic database for Thermo-Calc"
 message: "If you use this database, please cite it as indicated here, and cite the original assessments listed in the README as well."
 type: dataset
+doi: 10.5281/zenodo.21925958
 authors:
   - family-names: "Cruz-Cervantes"
     given-names: "Fernando Ivan"

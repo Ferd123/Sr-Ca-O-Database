@@ -1,5 +1,7 @@
 # Ca-Sr-O thermodynamic database for Thermo-Calc
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21925958.svg)](https://doi.org/10.5281/zenodo.21925958)
+
 CALPHAD description of the Ca-Sr-O system with the liquid phase in the **associate
 model** (species Ca, Sr, O, CaO, SrO), assembled from five published sources that used
 mutually incompatible models.
