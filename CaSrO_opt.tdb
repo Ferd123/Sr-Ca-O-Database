@@ -170,11 +170,11 @@ $ ==== [Ca, O, Sr] ====
  NUMBER      SOURCE
  REF1        'Deffrennes et al., Calphad 69 (2020) 101764'
  REF2        'Risold, Hallstedt, Gauckler, Calphad 20(3) (1996) 353-361'
- REF3        'Risold et al., J Am Ceram Soc 80(3) (1997) 537-548, Tabla VI'
+ REF3        'Risold et al., J Am Ceram Soc 80(3) (1997) 537-548, Table VI'
  REF5        'Aljarrah, Medraj, Calphad 32 (2008) 240-251'
  REF6        'Dinsdale, Calphad 15(4) (1991) 317-425 (SGTE PURE5)'
- REF7        'Estimado en este trabajo por analogia con Ca-O'
- REF8        'Reoptimizado en este trabajo con PARROT sobre los 15 puntos
-              de la laguna de miscibilidad medidos por Jacob y Waseda,
-              J Am Ceram Soc 81(4) (1998) 1065-1068. Partida: Risold 1997.'
+ REF7        'Estimated in this work by analogy with Ca-O'
+ REF8        'Reoptimized in this work with PARROT on the 15 miscibility
+              gap points measured by Jacob and Waseda, J Am Ceram Soc
+              81(4) (1998) 1065-1068. Starting values: Risold 1997.'
   !

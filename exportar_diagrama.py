@@ -1,20 +1,20 @@
 r"""
-Convierte un archivo DATAPLOT (.exp) exportado por Thermo-Calc a un CSV
-ordenado, apto para ser graficado con cualquier herramienta.
+Converts a DATAPLOT file (.exp) exported by Thermo-Calc into a tidy CSV,
+suitable for plotting with any tool.
 
     python exportar_diagrama.py dos.exp diagrama_CaSrO.csv
 
-El .exp contiene el diagrama ya calculado como coordenadas numericas,
-agrupadas en bloques. Cada bloque es una linea continua del diagrama y va
-precedido de comentarios que declaran las fases implicadas:
+The .exp holds the already calculated diagram as numerical coordinates,
+grouped into blocks. Each block is one continuous line of the diagram and is
+preceded by comments declaring the phases involved:
 
     $ BLOCK #68 1 FOR:
-    $E LIQUID          <- fase que aparece o desaparece
-    $F0 HALITE#2       <- fase fijada en cantidad cero (el limite)
+    $E LIQUID          <- phase that appears or disappears
+    $F0 HALITE#2       <- phase fixed at zero amount (the boundary)
 
-El CSV resultante lleva una fila por punto y una columna que identifica a
-que frontera pertenece, de modo que quien lo reciba pueda trazar cada linea
-por separado sin disponer de Thermo-Calc.
+The resulting CSV carries one row per point and a column identifying which
+boundary it belongs to, so that whoever receives it can draw each line
+separately without having Thermo-Calc.
 """
 import csv
 import io
@@ -27,7 +27,7 @@ SAL = sys.argv[2] if len(sys.argv) > 2 else "diagrama_CaSrO.csv"
 lineas = io.open(ENT, encoding="latin-1").read().splitlines()
 
 meta = {}
-for l in lineas:                       # encabezado global
+for l in lineas:                       # global header
     m = re.match(r"\s*(XTEXT|YTEXT|TITLE)\s+(.*)", l)
     if m:
         meta[m.group(1)] = m.group(2).strip().rstrip(",")
@@ -43,7 +43,7 @@ for l in lineas:
         bloque += 1
         fases = []
         continue
-    m = re.match(r"\$([EF]\d*)\s+(\S+)", s)          # $E / $F0 declaran fases
+    m = re.match(r"\$([EF]\d*)\s+(\S+)", s)          # $E / $F0 declare phases
     if m:
         fases.append(f"{m.group(1)}:{m.group(2)}")
         continue
@@ -64,17 +64,17 @@ for l in lineas:
 
 with io.open(SAL, "w", encoding="utf-8", newline="") as f:
     w = csv.writer(f)
-    # Las lineas de comentario no deben contener comas: el modulo csv las
-    # entrecomillaria y dejarian de reconocerse como comentario al leer el
-    # archivo con pandas u hojas de calculo.
-    w.writerow([f"# {meta.get('TITLE','diagrama').replace(',', ' ')}"])
-    w.writerow([f"# columna x: {meta.get('XTEXT','x')}   columna y: {meta.get('YTEXT','y')}"])
-    w.writerow(["# frontera = numero de linea continua"])
-    w.writerow(["# fases: E = aparece o desaparece / F0 = fijada en cantidad cero"])
-    w.writerow(["# CALCULADO = frontera obtenida por tangente comun (no exportada del MAP)"])
-    w.writerow(["frontera", "fases", meta.get("XTEXT", "x"), meta.get("YTEXT", "y")])
+    # Comment lines must not contain commas: the csv module would quote them
+    # and they would stop being recognised as comments when the file is read
+    # with pandas or a spreadsheet.
+    w.writerow([f"# {meta.get('TITLE','diagram').replace(',', ' ')}"])
+    w.writerow([f"# column x: {meta.get('XTEXT','x')}   column y: {meta.get('YTEXT','y')}"])
+    w.writerow(["# boundary = number of the continuous line"])
+    w.writerow(["# phases: E = appears or disappears / F0 = fixed at zero amount"])
+    w.writerow(["# CALCULATED = boundary obtained by common tangent (not exported from the MAP)"])
+    w.writerow(["boundary", "phases", meta.get("XTEXT", "x"), meta.get("YTEXT", "y")])
     w.writerows(filas)
 
 print(f"{ENT} -> {SAL}")
-print(f"  {bloque} fronteras, {len(filas)} puntos")
-print(f"  ejes: {meta.get('XTEXT')} / {meta.get('YTEXT')}")
+print(f"  {bloque} boundaries, {len(filas)} points")
+print(f"  axes: {meta.get('XTEXT')} / {meta.get('YTEXT')}")

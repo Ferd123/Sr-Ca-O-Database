@@ -1,21 +1,21 @@
 r"""
-Anade al CSV del diagrama la frontera de la laguna de miscibilidad de la
-halita, que el comando MAP de Thermo-Calc no traza automaticamente.
+Appends to the diagram CSV the boundary of the halite miscibility gap, which
+the Thermo-Calc MAP command does not trace automatically.
 
     python anadir_laguna.py diagrama_CaSrO_completo.csv
 
-La binodal se obtiene resolviendo la condicion de tangente comun sobre el
-modelo de la base optimizada:
+The binodal is obtained by solving the common tangent condition on the model of
+the optimized database:
 
     G = RT[(1-y)ln(1-y) + y ln y] + (1-y)y[L0 + L1(1-2y)]
     L0 = V1 + V2*T,  L1 = V3
     V1 = 23756.012326,  V2 = -3.6129815828,  V3 = 916.2431862683
 
-y = fraccion de sitio de Sr en la subred cationica. El eje del CSV es la
-fraccion molar de Thermo-Calc, X(SR) = y/2, porque cuenta tambien el oxigeno.
+y = site fraction of Sr on the cation sublattice. The CSV axis is the
+Thermo-Calc mole fraction, X(SR) = y/2, because it counts the oxygen as well.
 
-Las filas anadidas se identifican con la etiqueta CALCULADO para que quede
-constancia de que no proceden de la exportacion del MAP.
+The appended rows are tagged CALCULATED so that it is on record that they do
+not come from the MAP export.
 """
 import csv
 import io
@@ -51,15 +51,15 @@ def binodal(T, guess=(0.10, 0.90)):
 
 
 def critico():
-    """Punto critico exacto: d2G/dy2 = d3G/dy3 = 0.
+    """Exact critical point: d2G/dy2 = d3G/dy3 = 0.
 
-    Con L0 = V1 + V2*T y L1 = V3 las derivadas son analiticas:
+    With L0 = V1 + V2*T and L1 = V3 the derivatives are analytic:
         d2G = RT[1/(1-y) + 1/y] - 2(L0 + 3*L1) + 12*L1*y
         d3G = RT[1/(1-y)^2 - 1/y^2] + 12*L1
-    De d3G = 0 se despeja T y se sustituye en d2G = 0, que queda en una
-    sola incognita. La biseccion sobre el fallo de fsolve subestima la
-    temperatura critica en poco mas de 1 K, porque fsolve deja de
-    converger algo antes de la cima.
+    T is solved from d3G = 0 and substituted into d2G = 0, which then has a
+    single unknown. Bisecting on the failure of fsolve underestimates the
+    critical temperature by a little over 1 K, because fsolve stops converging
+    somewhat before the top.
     """
     from scipy.optimize import brentq
 
@@ -82,8 +82,8 @@ Y_C, TC = critico()
 filas = list(csv.reader(io.open(CSV, encoding="utf-8")))
 nueva = max(int(r[0]) for r in filas if r and r[0].isdigit()) + 1
 
-# Continuacion: cada solucion sirve de valor inicial de la siguiente, lo que
-# permite acercarse a la cima mucho mas que arrancando siempre de (0.1, 0.9).
+# Continuation: each solution serves as the initial guess for the next, which
+# allows getting much closer to the top than always starting from (0.1, 0.9).
 rama1, rama2 = [], []
 guess = (0.02, 0.98)
 for T in np.linspace(300.0, TC, 500)[:-1]:
@@ -94,16 +94,16 @@ for T in np.linspace(300.0, TC, 500)[:-1]:
     rama1.append((b[0] / 2, T))
     rama2.append((b[1] / 2, T))
 
-# Cierre exacto en el punto critico calculado analiticamente.
+# Exact closure at the analytically computed critical point.
 curva = rama1 + [(Y_C / 2, TC)] + list(reversed(rama2))
-etiqueta = "CALCULADO E:HALITE#1 + E:HALITE#2 (laguna de miscibilidad)"
+etiqueta = "CALCULATED E:HALITE#1 + E:HALITE#2 (miscibility gap)"
 
 with io.open(CSV, "a", encoding="utf-8", newline="") as f:
     w = csv.writer(f)
     for x, T in curva:
         w.writerow([nueva, etiqueta, f"{x:.10f}", f"{T:.4f}"])
 
-print(f"anadida la frontera {nueva} al archivo {CSV}")
-print(f"  {len(curva)} puntos")
-print(f"  temperatura critica {TC:.2f} K = {TC - 273.15:.2f} C")
-print(f"  X(SR) critico {Y_C / 2:.4f}")
+print(f"appended boundary {nueva} to file {CSV}")
+print(f"  {len(curva)} points")
+print(f"  critical temperature {TC:.2f} K = {TC - 273.15:.2f} C")
+print(f"  critical X(SR) {Y_C / 2:.4f}")

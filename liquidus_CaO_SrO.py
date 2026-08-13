@@ -1,17 +1,17 @@
 r"""
-Liquidus y solidus del pseudobinario CaO-SrO por construccion de envolvente
-convexa sobre las curvas de energia de Gibbs del liquido (asociados) y de la
-halita (dos subredes), con las funciones de CaSrO_opt.tdb.
+Liquidus and solidus of the CaO-SrO pseudobinary by convex hull construction on
+the Gibbs energy curves of the liquid (associates) and of the halite (two
+sublattices), with the functions of CaSrO_opt.tdb.
 
-Objetivo: mostrar de que depende la forma del campo bifasico L+halita, que es
-donde nuestro diagrama difiere del de FactSage FToxid.
+Purpose: to show what governs the shape of the two-phase L+halite field, which
+is where our diagram differs from the FactSage FToxid one.
 
-La envolvente convexa se usa en lugar de resolver la tangente comun con un
-metodo de Newton porque no depende de valores iniciales y detecta cualquier
-topologia: lente simple, minimo congruente o eutectico.
+The convex hull is used instead of solving the common tangent with a Newton
+method because it does not depend on initial values and detects any topology:
+simple lens, congruent minimum or eutectic.
 
-Variable de composicion: y = fraccion de SrO. Energias por mol de formula
-(Ca,Sr)O, es decir dos atomos.
+Composition variable: y = fraction of SrO. Energies per mole of formula unit
+(Ca,Sr)O, that is, two atoms.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -62,11 +62,11 @@ def G_sol(y, T, L0, L1):
 
 
 def envolvente(T, L_liq, L0, L1, n=1200):
-    """Tie-lines a temperatura T por envolvente convexa inferior.
+    """Tie-lines at temperature T from the lower convex hull.
 
-    Devuelve una lista de (y_izq, fase_izq, y_der, fase_der) para cada arista
-    de la envolvente que une dos puntos no contiguos, es decir cada region
-    bifasica.
+    Returns a list of (y_left, phase_left, y_right, phase_right) for each edge
+    of the hull joining two non-adjacent points, that is, for each two-phase
+    region.
     """
     y = np.linspace(1e-5, 1 - 1e-5, n)
     pts = np.concatenate([np.c_[y, G_liq(y, T, L_liq), np.zeros(n)],
@@ -74,9 +74,9 @@ def envolvente(T, L_liq, L0, L1, n=1200):
     orden = np.argsort(pts[:, 0], kind="stable")
     pts = pts[orden]
 
-    # Envolvente convexa INFERIOR (cadena monotona de Andrew). Se descarta el
-    # ultimo punto mientras el giro no sea antihorario, es decir mientras el
-    # producto cruzado sea <= 0.
+    # LOWER convex hull (Andrew's monotone chain). The last point is dropped
+    # while the turn is not counter-clockwise, that is, while the cross
+    # product is <= 0.
     def cruz(o, a, b):
         return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
 
@@ -88,13 +88,13 @@ def envolvente(T, L_liq, L0, L1, n=1200):
 
     tie = []
     for (x1, g1, f1), (x2, g2, f2) in zip(casco[:-1], casco[1:]):
-        if x2 - x1 > 3.0 / n and f1 != f2:      # arista larga entre fases distintas
+        if x2 - x1 > 3.0 / n and f1 != f2:      # long edge between distinct phases
             tie.append((x1, int(f1), x2, int(f2)))
     return tie
 
 
 def campo(L_liq, L0, L1, Ts):
-    """Devuelve (T, y_solido, y_liquido) del campo L+halita."""
+    """Returns (T, y_solid, y_liquid) of the L+halite field."""
     Tl, ysol, yliq = [], [], []
     for T in Ts:
         for x1, f1, x2, f2 in envolvente(T, L_liq, L0, L1):
@@ -108,12 +108,12 @@ L0_nuestro = lambda T: 23756.0 - 3.6130 * T
 L1_nuestro = 916.24
 Ts = np.linspace(2830, 3221.5, 700)
 
-casos = [("L(liq) = +25000   (Risold, la de esta base)", 25000.0, "#2a78d6"),
+casos = [("L(liq) = +25000   (Risold, the one in this database)", 25000.0, "#2a78d6"),
          ("L(liq) = +10000", 10000.0, "#eda100"),
-         ("L(liq) = 0   (liquido ideal)", 0.0, "#eb6834")]
+         ("L(liq) = 0   (ideal liquid)", 0.0, "#eb6834")]
 
 fig, ax = plt.subplots(figsize=(8.2, 6.4))
-print(f"{'caso':52s} {'ancho max':>10s} {'en y':>6s} {'T min liquidus':>15s}")
+print(f"{'case':52s} {'max width':>10s} {'at y':>6s} {'T min liquidus':>15s}")
 for etiqueta, Ll, color in casos:
     T, ys, yl = campo(Ll, L0_nuestro, L1_nuestro, Ts)
     ax.plot(yl, T, ".", color=color, ms=2.0, label=etiqueta)
@@ -121,11 +121,11 @@ for etiqueta, Ll, color in casos:
     anc = np.abs(yl - ys); i = int(np.argmax(anc))
     print(f"{etiqueta:52s} {anc[i]:10.3f} {yl[i]:6.2f} {T.min():13.0f} K")
 
-ax.plot([], [], ".", color="#52514e", ms=6, label="liquidus (trazo grueso)")
-ax.plot([], [], ".", color="#52514e", ms=3, alpha=0.55, label="solidus (trazo fino)")
-ax.set_xlabel("fraccion de SrO        (0 = CaO,  1 = SrO)")
+ax.plot([], [], ".", color="#52514e", ms=6, label="liquidus (thick trace)")
+ax.plot([], [], ".", color="#52514e", ms=3, alpha=0.55, label="solidus (thin trace)")
+ax.set_xlabel("fraction of SrO        (0 = CaO,  1 = SrO)")
 ax.set_ylabel("T / K")
-ax.set_title("El campo L + halita lo fija la DIFERENCIA de exceso entre liquido y solido")
+ax.set_title("The L + halite field is set by the DIFFERENCE in excess between liquid and solid")
 ax.grid(color="#e1e0d9", lw=0.7); ax.set_axisbelow(True)
 ax.set_xlim(0, 1); ax.set_ylim(2840, 3245)
 for s in ("top", "right"):

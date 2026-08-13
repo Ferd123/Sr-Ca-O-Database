@@ -1,11 +1,11 @@
 r"""
-Diagrama pseudobinario CaO-SrO calculado con las dos bases, para ver el
-efecto del unico parametro que las diferencia: L(LIQUID,CAO,SRO;0).
+CaO-SrO pseudobinary diagram computed with both databases, to see the effect of
+the single parameter that differs between them: L(LIQUID,CAO,SRO;0).
 
-Izquierda  CaSrO_opt.tdb      L = +25000 (Risold 1997)
-Derecha    CaSrO_opt_liq.tdb  L =  +2000 (analogia Zhang 2016)
+Left   CaSrO_opt.tdb      L = +25000 (Risold 1997)
+Right  CaSrO_opt_liq.tdb  L =  +2000 (Zhang 2016 analogy)
 
-La laguna de la halita es identica en ambas: no depende de ese parametro.
+The halite gap is identical in both: it does not depend on that parameter.
 """
 import numpy as np
 from scipy.optimize import fsolve, brentq
@@ -53,12 +53,12 @@ Ts_liq = np.linspace(2840, 3221.5, 600)
 
 fig, axes = plt.subplots(1, 2, figsize=(12.4, 6.2), sharey=True)
 for ax, (L, tit, col) in zip(axes, [(25000.0, "CaSrO_opt.tdb\nL(liq) = +25000   (Risold 1997)", "#2a78d6"),
-                                    (2000.0, "CaSrO_opt_liq.tdb\nL(liq) = +2000   (analogia Zhang 2016)", "#1baf7a")]):
+                                    (2000.0, "CaSrO_opt_liq.tdb\nL(liq) = +2000   (Zhang 2016 analogy)", "#1baf7a")]):
     T, ys, yl = campo(L, L0, L1, Ts_liq)
     ax.plot(yl, T, ".", color=col, ms=2.4)
     ax.plot(ys, T, ".", color=col, ms=1.2, alpha=0.6)
 
-    # laguna de la halita, identica en ambas
+    # halite gap, identical in both
     r1, r2, Tg = [], [], []
     g = (0.02, 0.98)
     for t in np.linspace(400, TC, 400)[:-1]:
@@ -70,18 +70,18 @@ for ax, (L, tit, col) in zip(axes, [(25000.0, "CaSrO_opt.tdb\nL(liq) = +25000   
     ax.plot([YC], [TC], "*", ms=11, color="#0b0b0b", mec="white", mew=0.8)
 
     ax.set_title(tit, fontsize=10.5)
-    ax.set_xlabel("fraccion de SrO     (0 = CaO,  1 = SrO)")
+    ax.set_xlabel("fraction of SrO     (0 = CaO,  1 = SrO)")
     ax.grid(color="#e1e0d9", lw=0.7); ax.set_axisbelow(True)
     ax.set_xlim(0, 1); ax.set_ylim(400, 3300)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
 
 axes[0].set_ylabel("T / K")
-axes[0].plot([], [], color="#eb6834", lw=1.9, label=f"laguna de la halita (Tc = {TC:.0f} K, identica)")
+axes[0].plot([], [], color="#eb6834", lw=1.9, label=f"halite gap (Tc = {TC:.0f} K, identical)")
 axes[0].plot([], [], ".", color="#52514e", ms=6, label="liquidus / solidus")
 axes[0].legend(frameon=False, fontsize=8.5, loc="center left")
-fig.suptitle("Un solo parametro de diferencia entre las dos bases", fontsize=12, y=0.98)
+fig.suptitle("A single parameter of difference between the two databases", fontsize=12, y=0.98)
 fig.tight_layout()
 fig.savefig("comparacion_bases.png", dpi=200)
-print(f"Tc halita = {TC:.2f} K,  x(CaO)c = {1-YC:.4f}   (igual en ambas)")
+print(f"halite Tc = {TC:.2f} K,  x(CaO)c = {1-YC:.4f}   (same in both)")
 print("-> comparacion_bases.png")

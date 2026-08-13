@@ -1,68 +1,69 @@
 $ ==========================================================================
-$ CaSrO.POP  -  datos experimentales para PARROT, sistema Ca-Sr-O
-$ Reescrito 2026-08-04.
+$ CaSrO.POP  -  experimental data for PARROT, Ca-Sr-O system
+$ Rewritten 2026-08-04.
 $ ==========================================================================
 $
-$ REGLAS DE CONSTRUCCION QUE HAY QUE RESPETAR (aprendidas a golpes)
+$ CONSTRUCTION RULES THAT MUST BE RESPECTED (learned the hard way)
 $
-$ R1. CREATE_NEW_EQUILIBRIUM n,1 arranca con TODAS LAS FASES SUSPENDIDAS.
-$     No hace falta suspender nada: hay que ENTRAR explicitamente las que
-$     deben participar. Si no se entra ninguna, o si todas las que se
-$     entran van con FIX, no queda ninguna fase con cantidad variable y
-$     Thermo-Calc aborta con
+$ R1. CREATE_NEW_EQUILIBRIUM n,1 starts with ALL PHASES SUSPENDED.
+$     Nothing needs to be suspended: the phases that must take part have
+$     to be ENTERED explicitly. If none is entered, or if every one that
+$     is entered goes with FIX, no phase is left with a variable amount
+$     and Thermo-Calc aborts with
 $        *** ERROR 1609 IN QEQUIL: NO PHASE WITH VARIABLE AMOUNT
-$     Ademas, sin fases entradas tampoco hay componentes definidos, y
-$     SET_REFERENCE_STATE falla con ERROR 1278 GZFREF: NO SUCH COMPONENT.
-$     Por eso cada equilibrio empieza con un CHANGE_STATUS ... =ENTERED.
+$     Moreover, with no entered phases there are no defined components
+$     either, and SET_REFERENCE_STATE fails with ERROR 1278 GZFREF: NO
+$     SUCH COMPONENT. That is why every equilibrium starts with a
+$     CHANGE_STATUS ... =ENTERED.
 $
-$ R2. condiciones + fases fijadas = C + 2 = 5, porque el sistema tiene
-$     tres componentes (Ca, Sr, O). Fijar una fase cuenta como condicion.
+$ R2. conditions + fixed phases = C + 2 = 5, because the system has three
+$     components (Ca, Sr, O). Fixing a phase counts as a condition.
 $
-$ R3. HALITE#2 NO se entra en los equilibrios donde se quiere una
-$     solucion HOMOGENEA. A 298 K la laguna de miscibilidad es anchisima,
-$     asi que si se entrara, los puntos de entalpia de mezcla se
-$     calcularian sobre una mezcla bifasica y no sobre la solucion.
+$ R3. HALITE#2 is NOT entered in the equilibria where a HOMOGENEOUS
+$     solution is wanted. At 298 K the miscibility gap is extremely wide,
+$     so if it were entered, the enthalpy of mixing points would be
+$     computed on a two-phase mixture and not on the solution.
 $
-$ R5. NO se usa SET_ALL_START. Pide interactivamente las fracciones de
-$     sitio de cada subred y, en modo macro, se traga las lineas de
-$     comentario del POP como si fueran numeros:
+$ R5. SET_ALL_START is NOT used. It asks interactively for the site
+$     fractions of each sublattice and, in macro mode, swallows the
+$     comment lines of the POP as if they were numbers:
 $        *** ERROR 1034 IN GETREL: NO DIGIT
-$     Terminarlo en N no lo evita: el prompt sale igual, ofreciendo el
-$     valor de SET_START_VALUE como default. En su lugar, cada
-$     equilibrio lleva sus SET_START_VALUE explicitos, que no preguntan
-$     nada.
+$     Ending it with N does not avoid this: the prompt appears anyway,
+$     offering the SET_START_VALUE as the default. Instead, each
+$     equilibrium carries its own explicit SET_START_VALUE, which ask
+$     nothing.
 $
-$ R6. SET_START_VALUE se da en FRACCION DE SITIO Y(fase,constituyente),
-$     no en fraccion molar X(fase,componente).
+$ R6. SET_START_VALUE is given as SITE FRACTION Y(phase,constituent),
+$     not as mole fraction X(phase,component).
 $
-$ R7. Una fase de varias subredes NO puede ser estado de referencia de
-$     sus componentes. SET_REFERENCE_STATE CA HALITE falla con ERROR
-$     1278 GZFREF: NO SUCH COMPONENT porque no existe una composicion de
-$     (Ca,Sr)1(O)1 que sea "Ca puro". Solo sirve para fases de una sola
-$     subred, como el LIQ del ejemplo tcex36.
+$ R7. A multi-sublattice phase CANNOT be the reference state of its own
+$     components. SET_REFERENCE_STATE CA HALITE fails with ERROR 1278
+$     GZFREF: NO SUCH COMPONENT because no composition of (Ca,Sr)1(O)1 is
+$     "pure Ca". It only works for single-sublattice phases, such as the
+$     LIQ of the tcex36 example.
 $
-$ R8. En un equilibrio con laguna de miscibilidad, los SET_START_VALUE
-$     NO son cosmeticos: son lo que decide si el calculo converge. Los
-$     dos conjuntos de composicion arrancan del mismo punto si no se les
-$     dice otra cosa, y entonces o colapsan en una sola fase (residuo
-$     enorme, suma de cuadrados de decenas de miles) o el solucionador
-$     se queda dando vueltas:
+$ R8. In an equilibrium with a miscibility gap the SET_START_VALUE are
+$     NOT cosmetic: they decide whether the calculation converges. The
+$     two composition sets start from the same point unless told
+$     otherwise, and then they either collapse into a single phase (huge
+$     residual, sum of squares in the tens of thousands) or the solver
+$     just spins:
 $        *** ERROR 1611 IN QTHISS: TOO MANY ITERATIONS
-$     Por eso NO se usa TABLE_HEAD para la laguna: en una tabla los
-$     valores de partida son los mismos para todas las filas, y aqui
-$     tienen que cambiar con la temperatura. Cada equilibrio va escrito
-$     entero, con los valores de partida de SU temperatura, tomados de
-$     la binodal calculada con los parametros de partida y separados
-$     0.03 hacia afuera para dejar margen cuando la optimizacion mueva
-$     los parametros y con ellos la binodal.
+$     That is why TABLE_HEAD is NOT used for the gap: in a table the
+$     start values are the same for every row, and here they have to
+$     change with temperature. Each equilibrium is written out in full,
+$     with the start values of ITS OWN temperature, taken from the
+$     binodal computed with the starting parameters and displaced 0.03
+$     outwards to leave room for the optimization to move the parameters
+$     and with them the binodal.
 $
-$ R4. HALITE#2 no existe hasta que se crea en GIBBS_ENERGY_SYSTEM antes
-$     de compilar. Sin eso, ERROR 1110 ILLEGAL COMPOSITION SET. Y hay
-$     que declarar tambien los mayoritarios del conjunto 1. Los dos
-$     comandos abren un prompt por subred, y NO basta con poner los
-$     argumentos en la misma linea: "composition_sets 2 SR O" deja
-$     abierto el prompt de la subred 2 y se come la linea siguiente.
-$     Una respuesta por renglon:
+$ R4. HALITE#2 does not exist until it is created in
+$     GIBBS_ENERGY_SYSTEM before compiling. Without that, ERROR 1110
+$     ILLEGAL COMPOSITION SET. The major constituents of set 1 must be
+$     declared as well. Both commands open one prompt per sublattice, and
+$     putting the arguments on the same line is NOT enough:
+$     "composition_sets 2 SR O" leaves the sublattice 2 prompt open and
+$     eats the next line. One answer per line:
 $        amend_phase HALITE composition_sets 2
 $        SR
 $        O
@@ -71,51 +72,50 @@ $        CA
 $        O
 $
 $ --------------------------------------------------------------------------
-$ QUE SE PUEDE OPTIMIZAR REALMENTE CON ESTE ARCHIVO
+$ WHAT CAN ACTUALLY BE OPTIMIZED WITH THIS FILE
 $
-$   L(HALITE,CA,SR:O;0) y ;1   <- si, con AGAP y AGAPT (15 puntos)
-$   L(LIQUID,CAO,SRO;0)        <- NO. No existe ningun dato experimental
-$                                 del liquido CaO-SrO. Risold et al.
-$                                 (1997) lo declaran desconocido y su
-$                                 valor de 50000 J es un parametro de
-$                                 ajuste de un cuaternario, no una medida.
-$   L(LIQUID,SRO,O;0)          <- NO. Tampoco hay datos.
+$   L(HALITE,CA,SR:O;0) and ;1 <- yes, with AGAP and AGAPT (15 points)
+$   L(LIQUID,CAO,SRO;0)        <- NO. No experimental datum on the
+$                                 CaO-SrO liquid exists. Risold et al.
+$                                 (1997) declare it unknown and their
+$                                 value of 50000 J is a fitting parameter
+$                                 of a quaternary, not a measurement.
+$   L(LIQUID,SRO,O;0)          <- NO. There are no data either.
 $
-$ Los bloques ALIQ y AMLT son VERIFICACION, no objetivo. Antes de
-$ optimizar, dentro de EDIT_EXPERIMENTS:
+$ The ALIQ and AMLT blocks are VERIFICATION, not target. Before
+$ optimizing, inside EDIT_EXPERIMENTS:
 $     s-we 0 ALIQ
 $     s-we 0 AMLT
 $ --------------------------------------------------------------------------
-$ PROCEDENCIA DE LOS DATOS
+$ PROVENANCE OF THE DATA
 $
-$ AGAP  Jacob y Jayadevan, J. Phase Equilibria 21(4) (2000) 350-356,
-$       Tabla 1 y texto. Originales de Jacob y Waseda, J. Am. Ceram. Soc.
-$       81 (1998) 1065. x(SrO) entre cationes 0.240 y 0.712; como
-$       X(HALITE,SR) cuenta TODOS los atomos y la mitad son oxigeno, en
-$       variable de Thermo-Calc son 0.120 y 0.356.
-$ AHMX  Desactivado, ver el bloque correspondiente mas abajo.
-$ AGAPT Laguna de miscibilidad entre 880 y 1128 K, digitalizada por mi de
-$       la Figura 1 de Risold et al. (1997): (cuadrados) Jacob et al. y
-$       (circulos) Roth. Son los datos a los que Risold ajusto.
-$ ALIQ  Fischbach (1985), ATD y analisis quimico, digitalizado de la
-$       Figura 3 de Deffrennes et al. (2020). Son los datos que ese
-$       trabajo ACEPTA; los de Zaitsev y el de Bevan los descarta.
-$ AMLT  CaO 3222+-25 K (Manara et al.). SrO 2870 K, valor adoptado por
-$       Risold et al. (1996) entre 2703, 2805, 2872 y 2938 K.
+$ AGAP  Jacob and Jayadevan, J. Phase Equilibria 21(4) (2000) 350-356,
+$       Table 1 and text. Originals from Jacob and Waseda, J. Am. Ceram.
+$       Soc. 81(4) (1998) 1065-1068. x(SrO) on a cation basis 0.240 and
+$       0.712; since X(HALITE,SR) counts ALL atoms and half of them are
+$       oxygen, in Thermo-Calc variables they are 0.120 and 0.356.
+$ AHMX  Deactivated, see the corresponding block further below.
+$ AGAPT Miscibility gap between 880 and 1128 K, digitized by the author
+$       from Figure 1 of Risold et al. (1997): (squares) Jacob et al. and
+$       (circles) Roth. These are the data Risold fitted.
+$ ALIQ  Fischbach (1985), DTA and chemical analysis, digitized from
+$       Figure 3 of Deffrennes et al. (2020). These are the data that
+$       work ACCEPTS; those of Zaitsev and of Bevan are discarded there.
+$ AMLT  CaO 3222+-25 K (Manara et al.). SrO 2870 K, the value adopted by
+$       Risold et al. (1996) among 2703, 2805, 2872 and 2938 K.
 $ ==========================================================================
 
 ENTER_SYMBOL CONSTANT P0=101325,DXG=0.0025,DXT=0.008,DXL=0.003
 ENTER_SYMBOL CONSTANT DT=10
 
 $ ==========================================================================
-$ AGAP - laguna de miscibilidad de la halita a 1100 K
+$ AGAP - halite miscibility gap at 1100 K
 $
-$ Se entran los dos conjuntos de composicion, sin fijar ninguno: la
-$ composicion global se pone dentro de la laguna
-$ (X(SR) = 0.238, el punto medio de 0.120 y 0.356) y se deja que el
-$ equilibrio encuentre solo las dos ramas. Asi todas las fases tienen
-$ cantidad variable y se cumple R1.
-$ Condiciones: P, T, N, X(SR), X(O) = 5 = C+2, sin fases fijadas.
+$ Both composition sets are entered, neither of them fixed: the overall
+$ composition is placed inside the gap (X(SR) = 0.238, the midpoint of
+$ 0.120 and 0.356) and the equilibrium is left to find the two branches
+$ on its own. This way every phase has a variable amount and R1 holds.
+$ Conditions: P, T, N, X(SR), X(O) = 5 = C+2, with no fixed phases.
 $ ==========================================================================
 
 CREATE_NEW_EQUILIBRIUM 1,1
@@ -124,94 +124,96 @@ SET-CONDITION P=P0,T=1100,N=1,X(SR)=0.238,X(O)=0.5
 EXPERIMENT X(HALITE#1,SR)=0.120:DXG
 EXPERIMENT X(HALITE#2,SR)=0.356:DXG
 LABEL AGAP
-$ Binodal calculada a 1100 K: y_Sr = 0.2325 y 0.6958. Ver R8.
+$ Binodal computed at 1100 K: y_Sr = 0.2325 and 0.6958. See R8.
 SET_START_VALUE Y(HALITE#1,CA)=0.7975
 SET_START_VALUE Y(HALITE#1,SR)=0.2025
 SET_START_VALUE Y(HALITE#2,SR)=0.7258
 SET_START_VALUE Y(HALITE#2,CA)=0.2742
 
 $ ==========================================================================
-$ AHMX - entalpia de mezcla de la halita a 298.15 K
+$ AHMX - enthalpy of mixing of the halite at 298.15 K
 $
-$ BLOQUE DESACTIVADO. Los datos estan aqui documentados pero NO se
-$ compilan como experimentos. Razon:
+$ BLOCK DEACTIVATED. The data are documented here but are NOT compiled
+$ as experiments. Reason:
 $
-$ Para que HMR sea entalpia de MEZCLA hace falta referir los tres
-$ componentes a la propia halita:
+$ For HMR to be an enthalpy of MIXING, the three components must be
+$ referred to the halite itself:
 $      SET_REFERENCE_STATE CA HALITE * 1E5
-$ y eso Thermo-Calc lo rechaza con
+$ and Thermo-Calc rejects that with
 $      *** ERROR 1278 IN GZFREF: NO SUCH COMPONENT
 $
-$ No es un error de sintaxis: esa forma es la del ejemplo oficial
-$ tcex36.POP (SET_REFERENCE_STATE A LIQ * 1E5), donde funciona. Lo que
-$ falla es el planteamiento. En tcex36 la fase LIQ tiene UNA subred con
-$ A y B, asi que "A puro en LIQ" existe. HALITE es (Ca,Sr)1(O)1: no hay
-$ ninguna composicion de la fase que sea "Ca puro", porque siempre
-$ arrastra el oxigeno. Y para el componente O es peor todavia, porque la
-$ subred 1 tendria que ser Ca o Sr y no hay eleccion unica. O sea, la
-$ halita no puede servir de estado de referencia de sus componentes.
+$ It is not a syntax error: that form is the one in the official example
+$ tcex36.POP (SET_REFERENCE_STATE A LIQ * 1E5), where it works. What
+$ fails is the formulation. In tcex36 the LIQ phase has ONE sublattice
+$ with A and B, so "pure A in LIQ" exists. HALITE is (Ca,Sr)1(O)1: no
+$ composition of the phase is "pure Ca", because it always drags the
+$ oxygen along. And for component O it is worse still, because
+$ sublattice 1 would have to be Ca or Sr and there is no unique choice.
+$ In short, the halite cannot serve as reference state for its own
+$ components.
 $
-$ No se pierde gran cosa: la laguna de miscibilidad entre 880 y 1128 K
-$ (bloques AGAP y AGAPT, 15 puntos) restringe L0 y L1 incluida su
-$ dependencia con T, que es lo mismo que restringirian estas entalpias.
+$ Not much is lost: the miscibility gap between 880 and 1128 K (blocks
+$ AGAP and AGAPT, 15 points) constrains L0 and L1 including their T
+$ dependence, which is what these enthalpies would constrain.
 $
-$ Datos, por si se quieren usar de otra forma. Flidlider et al. (1966),
-$ digitalizados de la Figura 3 de Risold et al. (1997):
+$ The data, in case they are to be used some other way. Flidlider et al.
+$ (1966), digitized from Figure 3 of Risold et al. (1997):
 $
-$    x(CaO)   X(SR)    dHmix medido   calculado con los parametros
-$                        (J/mol)          actuales (J/mol)
+$    x(CaO)   X(SR)    dHmix measured   computed with the current
+$                        (J/mol)          parameters (J/mol)
 $    0.208    0.3960       3110              3670
 $    0.496    0.2520       6570              5750
 $    0.643    0.1785       5220              5360
 $    0.687    0.1565       4680              5040
 $
-$ La dispersion de los datos es de +-0.8 kJ/mol y la curva publicada por
-$ Risold pasa por 5750 J/mol en x(CaO)=0.5, exactamente lo que da esta
-$ base. O sea que ya estan reproducidos dentro de su propia dispersion.
+$ The scatter of the data is +-0.8 kJ/mol and the curve published by
+$ Risold passes through 5750 J/mol at x(CaO)=0.5, exactly what this
+$ database gives. So they are already reproduced within their own
+$ scatter.
 $ ==========================================================================
 
 $ ==========================================================================
-$ AGAPT - laguna de miscibilidad entre 880 y 1128 K
+$ AGAPT - miscibility gap between 880 and 1128 K
 $
-$ Digitalizada de la Figura 1 de Risold et al. (1997). El eje de esa
-$ figura es x(CaO), con SrO en 0 y CaO en 1.0; aqui se convierte con
+$ Digitized from Figure 1 of Risold et al. (1997). The axis of that
+$ figure is x(CaO), with SrO at 0 and CaO at 1.0; here it is converted
+$ with
 $     X(SR) = (1 - x(CaO)) / 2
-$ porque X(SR) de Thermo-Calc cuenta todos los atomos y la mitad son
-$ oxigeno.
+$ because the Thermo-Calc X(SR) counts all atoms and half of them are
+$ oxygen.
 $
-$ HALITE#1 es la rama rica en Ca y HALITE#2 la rica en Sr, porque el
-$ macro crea el segundo conjunto con SR como constituyente mayoritario.
-$ Cada fila da la composicion de UNA de las dos ramas; la composicion
-$ global se fija en X(SR) = 0.25, que cae dentro de la laguna en todo
-$ este rango de temperatura.
+$ HALITE#1 is the Ca-rich branch and HALITE#2 the Sr-rich one, because
+$ the macro creates the second set with SR as major constituent. Each
+$ row gives the composition of ONE of the two branches; the overall
+$ composition is fixed at X(SR) = 0.25, which falls inside the gap
+$ throughout this temperature range.
 $
-$ Verificacion previa: estos 13 puntos caen sobre la binodal calculada
-$ con los parametros actuales con desviacion media de 0.009 en fraccion
-$ molar. O sea, la base ya los reproduce.
+$ Prior check: these 13 points fall on the binodal computed with the
+$ current parameters with a mean deviation of 0.009 in mole fraction.
+$ That is, the database already reproduces them.
 $
-$ SUMA DE CUADRADOS QUE HAY QUE ESPERAR SI TODO CONVERGE
-$   AGAPT  1.35   (13 puntos, el peor es el de 1113 K con residuo -0.84)
-$   AGAP  12.72   (2 puntos, con la incertidumbre estrecha DXG=0.0025)
+$ SUM OF SQUARES TO EXPECT IF EVERYTHING CONVERGES
+$   AGAPT  1.35   (13 points, the worst is that at 1113 K, residual -0.84)
+$   AGAP  12.72   (2 points, with the narrow uncertainty DXG=0.0025)
 $   total 14.07
-$ Si OPT 0 devuelve miles, es que los equilibrios no convergieron o los
-$ dos conjuntos de composicion colapsaron; no es que los parametros esten
-$ mal. El 12.72 de AGAP esta comprobado: es exactamente lo que reporto
-$ Thermo-Calc en la corrida en la que solo ese equilibrio llego a
-$ compilar.
+$ If OPT 0 returns thousands, it means the equilibria did not converge or
+$ the two composition sets collapsed; it does not mean the parameters are
+$ wrong. The 12.72 of AGAP is confirmed: it is exactly what Thermo-Calc
+$ reported in the run where only that equilibrium managed to compile.
 $
-$ La temperatura critica de la laguna con estos parametros es 1179 K, y
-$ el punto experimental mas alto esta en 1128 K. O sea que los ultimos
-$ equilibrios trabajan a 96% de Tc, donde las dos ramas ya estan cerca y
-$ la superficie de energia es muy plana. Son los mas delicados.
+$ The critical temperature of the gap with these parameters is 1179 K,
+$ and the highest experimental point is at 1128 K. So the last equilibria
+$ work at 96% of Tc, where the two branches are already close and the
+$ energy surface is very flat. They are the most delicate ones.
 $ ==========================================================================
 
-$ NO se usa TABLE_HEAD aqui, ver R8: cada equilibrio necesita SUS
-$ PROPIOS valores de partida, y en una tabla todos comparten los mismos.
-$ Con los valores genericos que habia antes (0.85 / 0.80), cinco de los
-$ trece equilibrios abortaban con ERROR 1611 IN QTHISS: TOO MANY
-$ ITERATIONS y el resto colapsaba a una sola fase.
+$ TABLE_HEAD is NOT used here, see R8: each equilibrium needs ITS OWN
+$ start values, and in a table they all share the same ones. With the
+$ generic values used before (0.85 / 0.80), five of the thirteen
+$ equilibria aborted with ERROR 1611 IN QTHISS: TOO MANY ITERATIONS and
+$ the rest collapsed to a single phase.
 
-$ 880 K, rama rica en Sr, x(CaO)=0.114
+$ 880 K, Sr-rich branch, x(CaO)=0.114
 CREATE_NEW_EQUILIBRIUM 201,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=880,N=1,X(SR)=0.25,X(O)=0.5
@@ -222,7 +224,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.0782
 SET_START_VALUE Y(HALITE#2,SR)=0.8872
 SET_START_VALUE Y(HALITE#2,CA)=0.1128
 
-$ 918 K, rama rica en Ca, x(CaO)=0.906
+$ 918 K, Ca-rich branch, x(CaO)=0.906
 CREATE_NEW_EQUILIBRIUM 202,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=918,N=1,X(SR)=0.25,X(O)=0.5
@@ -233,7 +235,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.0948
 SET_START_VALUE Y(HALITE#2,SR)=0.8653
 SET_START_VALUE Y(HALITE#2,CA)=0.1347
 
-$ 937 K, rama rica en Ca, x(CaO)=0.896
+$ 937 K, Ca-rich branch, x(CaO)=0.896
 CREATE_NEW_EQUILIBRIUM 203,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=937,N=1,X(SR)=0.25,X(O)=0.5
@@ -244,7 +246,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.1042
 SET_START_VALUE Y(HALITE#2,SR)=0.8531
 SET_START_VALUE Y(HALITE#2,CA)=0.1469
 
-$ 957 K, rama rica en Ca, x(CaO)=0.885
+$ 957 K, Ca-rich branch, x(CaO)=0.885
 CREATE_NEW_EQUILIBRIUM 204,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=957,N=1,X(SR)=0.25,X(O)=0.5
@@ -255,7 +257,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.1149
 SET_START_VALUE Y(HALITE#2,SR)=0.8393
 SET_START_VALUE Y(HALITE#2,CA)=0.1607
 
-$ 1006 K, rama rica en Sr, x(CaO)=0.203
+$ 1006 K, Sr-rich branch, x(CaO)=0.203
 CREATE_NEW_EQUILIBRIUM 205,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1006,N=1,X(SR)=0.25,X(O)=0.5
@@ -266,7 +268,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.1456
 SET_START_VALUE Y(HALITE#2,SR)=0.8005
 SET_START_VALUE Y(HALITE#2,CA)=0.1995
 
-$ 1055 K, rama rica en Ca, x(CaO)=0.817
+$ 1055 K, Ca-rich branch, x(CaO)=0.817
 CREATE_NEW_EQUILIBRIUM 206,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1055,N=1,X(SR)=0.25,X(O)=0.5
@@ -277,7 +279,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.1847
 SET_START_VALUE Y(HALITE#2,SR)=0.7525
 SET_START_VALUE Y(HALITE#2,CA)=0.2475
 
-$ 1067 K, rama rica en Ca, x(CaO)=0.805
+$ 1067 K, Ca-rich branch, x(CaO)=0.805
 CREATE_NEW_EQUILIBRIUM 207,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1067,N=1,X(SR)=0.25,X(O)=0.5
@@ -288,7 +290,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.1961
 SET_START_VALUE Y(HALITE#2,SR)=0.7388
 SET_START_VALUE Y(HALITE#2,CA)=0.2612
 
-$ 1081 K, rama rica en Ca, x(CaO)=0.790
+$ 1081 K, Ca-rich branch, x(CaO)=0.790
 CREATE_NEW_EQUILIBRIUM 208,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1081,N=1,X(SR)=0.25,X(O)=0.5
@@ -299,7 +301,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.2100
 SET_START_VALUE Y(HALITE#2,SR)=0.7200
 SET_START_VALUE Y(HALITE#2,CA)=0.2800
 
-$ 1097 K, rama rica en Ca, x(CaO)=0.772
+$ 1097 K, Ca-rich branch, x(CaO)=0.772
 CREATE_NEW_EQUILIBRIUM 209,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1097,N=1,X(SR)=0.25,X(O)=0.5
@@ -310,7 +312,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.2288
 SET_START_VALUE Y(HALITE#2,SR)=0.7301
 SET_START_VALUE Y(HALITE#2,CA)=0.2699
 
-$ 1113 K, rama rica en Ca, x(CaO)=0.737
+$ 1113 K, Ca-rich branch, x(CaO)=0.737
 CREATE_NEW_EQUILIBRIUM 210,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1113,N=1,X(SR)=0.25,X(O)=0.5
@@ -321,7 +323,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.2496
 SET_START_VALUE Y(HALITE#2,SR)=0.7060
 SET_START_VALUE Y(HALITE#2,CA)=0.2940
 
-$ 1117 K, rama rica en Sr, x(CaO)=0.336
+$ 1117 K, Sr-rich branch, x(CaO)=0.336
 CREATE_NEW_EQUILIBRIUM 211,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1117,N=1,X(SR)=0.25,X(O)=0.5
@@ -332,7 +334,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.2253
 SET_START_VALUE Y(HALITE#2,SR)=0.6995
 SET_START_VALUE Y(HALITE#2,CA)=0.3005
 
-$ 1125 K, rama rica en Sr, x(CaO)=0.355
+$ 1125 K, Sr-rich branch, x(CaO)=0.355
 CREATE_NEW_EQUILIBRIUM 212,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1125,N=1,X(SR)=0.25,X(O)=0.5
@@ -343,7 +345,7 @@ SET_START_VALUE Y(HALITE#1,SR)=0.2374
 SET_START_VALUE Y(HALITE#2,SR)=0.6857
 SET_START_VALUE Y(HALITE#2,CA)=0.3143
 
-$ 1128 K, rama rica en Ca, x(CaO)=0.727
+$ 1128 K, Ca-rich branch, x(CaO)=0.727
 CREATE_NEW_EQUILIBRIUM 213,1
 CHANGE_STATUS PHASE HALITE#1,HALITE#2=ENTERED 1
 SET-CONDITION P=P0,T=1128,N=1,X(SR)=0.25,X(O)=0.5
@@ -355,19 +357,19 @@ SET_START_VALUE Y(HALITE#2,SR)=0.6802
 SET_START_VALUE Y(HALITE#2,CA)=0.3198
 
 $ ==========================================================================
-$ ALIQ - liquidus Ca-CaO   (VERIFICACION, poner peso 0 antes de optimizar)
+$ ALIQ - Ca-CaO liquidus   (VERIFICATION, set weight 0 before optimizing)
 $
-$ HALITE#1 fijada en CERO, que es la forma de decir "el liquido esta
-$ justo saturado". LIQUID entrada y libre, cumpliendo R1.
-$ Condiciones: P, T, N, X(SR) = 4, mas 1 fase fijada = 5.
+$ HALITE#1 fixed at ZERO, which is how to say "the liquid is just
+$ saturated". LIQUID entered and free, satisfying R1.
+$ Conditions: P, T, N, X(SR) = 4, plus 1 fixed phase = 5.
 $ ==========================================================================
 
-$ Sin TABLE_HEAD, por la misma razon que en AGAPT (R8): la fraccion de
-$ CaO de partida en el liquido tiene que seguir a la composicion de
-$ cada punto. En la tabla anterior las 12 filas compartian
-$ Y(LIQUID,CAO)=0.05 y solo se compilaron 6 de los 12 equilibrios.
-$ y_CaO de partida = x(O)/(1-x(O)), que es la relacion exacta del
-$ modelo de asociados cuando y_O es despreciable.
+$ No TABLE_HEAD, for the same reason as in AGAPT (R8): the starting CaO
+$ fraction in the liquid has to follow the composition of each point. In
+$ the previous table the 12 rows shared Y(LIQUID,CAO)=0.05 and only 6 of
+$ the 12 equilibria compiled.
+$ Starting y_CaO = x(O)/(1-x(O)), which is the exact relation of the
+$ associate model when y_O is negligible.
 
 $ 1280 K, x(O)=0.0250, DTA
 CREATE_NEW_EQUILIBRIUM 21,1
@@ -435,7 +437,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9562
 SET_START_VALUE Y(LIQUID,CAO)=0.0438
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1232 K, x(O)=0.0260, analisis quimico
+$ 1232 K, x(O)=0.0260, chemical analysis
 CREATE_NEW_EQUILIBRIUM 27,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -446,7 +448,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9733
 SET_START_VALUE Y(LIQUID,CAO)=0.0267
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1283 K, x(O)=0.0280, analisis quimico
+$ 1283 K, x(O)=0.0280, chemical analysis
 CREATE_NEW_EQUILIBRIUM 28,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -457,7 +459,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9712
 SET_START_VALUE Y(LIQUID,CAO)=0.0288
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1472 K, x(O)=0.0330, analisis quimico
+$ 1472 K, x(O)=0.0330, chemical analysis
 CREATE_NEW_EQUILIBRIUM 29,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -468,7 +470,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9659
 SET_START_VALUE Y(LIQUID,CAO)=0.0341
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1470 K, x(O)=0.0390, analisis quimico
+$ 1470 K, x(O)=0.0390, chemical analysis
 CREATE_NEW_EQUILIBRIUM 30,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -479,7 +481,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9594
 SET_START_VALUE Y(LIQUID,CAO)=0.0406
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1710 K, x(O)=0.0580, analisis quimico
+$ 1710 K, x(O)=0.0580, chemical analysis
 CREATE_NEW_EQUILIBRIUM 31,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -490,7 +492,7 @@ SET_START_VALUE Y(LIQUID,CA)=0.9384
 SET_START_VALUE Y(LIQUID,CAO)=0.0616
 SET_START_VALUE Y(HALITE#1,CA)=1
 
-$ 1710 K, x(O)=0.0620, analisis quimico
+$ 1710 K, x(O)=0.0620, chemical analysis
 CREATE_NEW_EQUILIBRIUM 32,1
 CHANGE_STATUS PHASE LIQUID=ENTERED 1
 CHANGE_STATUS PHASE HALITE#1=FIX 0
@@ -502,11 +504,11 @@ SET_START_VALUE Y(LIQUID,CAO)=0.0661
 SET_START_VALUE Y(HALITE#1,CA)=1
 
 $ ==========================================================================
-$ AMLT - fusiones congruentes   (VERIFICACION, poner peso 0)
+$ AMLT - congruent melting points   (VERIFICATION, set weight 0)
 $
-$ Misma construccion: HALITE#1 fijada en cero, LIQUID libre, y la
-$ temperatura sale como incognita porque es lo que se mide.
-$ Condiciones: P, N, X(SR), X(O) = 4, mas 1 fase fijada = 5.
+$ Same construction: HALITE#1 fixed at zero, LIQUID free, and the
+$ temperature comes out as the unknown because it is what is measured.
+$ Conditions: P, N, X(SR), X(O) = 4, plus 1 fixed phase = 5.
 $ ==========================================================================
 
 CREATE_NEW_EQUILIBRIUM 100,1
@@ -528,24 +530,25 @@ SET_START_VALUE Y(LIQUID,SRO)=1
 SET_START_VALUE Y(HALITE#1,SR)=1
 
 $ ==========================================================================
-$ DATOS QUE NO SE INCLUYEN, Y POR QUE
+$ DATA THAT ARE NOT INCLUDED, AND WHY
 $
-$ - Solubilidad reportada por Zaitsev (1998,1999): Deffrennes concluye
-$   que o no son medidas reales o sobreestiman por arrastre de CaO sin
-$   disolver. Se desvian cada vez mas al subir la temperatura.
-$ - Estimacion visual de Bevan (1956), 14.2 at.%O a 1523 K: tres veces
-$   cualquier medida directa. Descartada por todos los asesores.
-$ - Actividad de Ca de Zaitsev: incompatible con las solubilidades de
-$   Fischbach. Deffrennes elige Fischbach; meter las dos daria un ajuste
-$   que no satisface a ninguna. Si prefieres la actividad, ese trabajo da
-$   el juego alternativo L(LIQUID,CA,CAO;0) = +9284.
-$ - dfG(SrO) de Ono et al. (1993): la base ya lo reproduce, -452.6
-$   kJ/mol a 1373 K contra la curva de Risold en ~-453. Los valores que
-$   circulaban en datos_experimentales_parrot.md estaban unos 26 kJ/mol
-$   demasiado negativos.
-$ - Variacion de la laguna con la temperatura (873-1223 K): digitalizada
-$   de una figura por un tercero, sin verificar. Anadirla ayudaria a
-$   fijar la parte en T de L0, pero antes hay que comprobarla.
+$ - Solubility reported by Zaitsev (1998,1999): Deffrennes concludes that
+$   either they are not real measurements or they overestimate through
+$   carry-over of undissolved CaO. They deviate more and more as the
+$   temperature rises.
+$ - Visual estimate of Bevan (1956), 14.2 at.%O at 1523 K: three times
+$   any direct measurement. Discarded by every assessor.
+$ - Ca activity of Zaitsev: incompatible with the Fischbach
+$   solubilities. Deffrennes chooses Fischbach; using both would give a
+$   fit that satisfies neither. If the activity is preferred, that work
+$   gives the alternative set L(LIQUID,CA,CAO;0) = +9284.
+$ - dfG(SrO) of Ono et al. (1993): the database already reproduces it,
+$   -452.6 kJ/mol at 1373 K against the Risold curve at ~-453. The values
+$   circulating in datos_experimentales_parrot.md were some 26 kJ/mol too
+$   negative.
+$ - Variation of the gap with temperature (873-1223 K): digitized from a
+$   figure by a third party, unverified. Adding it would help pin down
+$   the T part of L0, but it has to be checked first.
 $ ==========================================================================
 
 SAVE_WORKSPACES

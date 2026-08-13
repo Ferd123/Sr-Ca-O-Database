@@ -1,37 +1,37 @@
-$ CaSrO_opt_liq.tdb   -   VARIANTE, 2026-08-05
+$ CaSrO_opt_liq.tdb   -   VARIANT, 2026-08-05
 $
-$ Identica a CaSrO_opt.tdb salvo en UN parametro:
+$ Identical to CaSrO_opt.tdb except for ONE parameter:
 $    L(LIQUID,CAO,SRO;0)   +25000  ->  +2000  J/mol
 $
-$ MOTIVO. El valor de 25000 procede de Risold et al. 1997 (50000 en el
-$ modelo ionico, la mitad al pasar a asociados). Los propios autores
-$ declaran desconocido el liquido CaO-SrO; su valor es un parametro de
-$ ajuste de un cuaternario, no una medida. Dos razones para rebajarlo:
+$ RATIONALE. The value 25000 comes from Risold et al. 1997 (50000 in the
+$ ionic model, halved on conversion to associates). The authors themselves
+$ state that the CaO-SrO liquid is unknown; their value is a fitting
+$ parameter of a quaternary, not a measurement. Two reasons to lower it:
 $
-$  1. FISICA. El exceso positivo de la halita procede de la diferencia de
-$     radio entre Ca2+ (100 pm) y Sr2+ (118 pm) forzados a posiciones
-$     equivalentes de la red. Al fundir desaparece la red y con ella ese
-$     coste, luego se espera L(liquido) < L(solido). La base tenia 25000
-$     frente a 12900 del solido a 3000 K: la relacion invertida.
+$  1. PHYSICS. The positive excess of the halite comes from the radius
+$     mismatch between Ca2+ (100 pm) and Sr2+ (118 pm) forced onto
+$     equivalent lattice sites. On melting the lattice disappears and so
+$     does that cost, hence L(liquid) < L(solid) is expected. The database
+$     had 25000 against 12900 for the solid at 3000 K: the ratio inverted.
 $
-$  2. ANALOGIA. Zhang, Mao y Taskinen, Calphad 54 (2016) 107-116,
-$     evaluaron con datos los sistemas analogos y obtuvieron, a 2500 K:
-$        BaO-CaO   halita +57200   liquido  +8825   (razon 6.5)
-$        BaO-SrO   halita +14717   liquido  ideal
-$     Aplicando la razon de BaO-CaO al exceso de nuestra halita sale
-$     L(liquido) ~ 2000 J/mol, que es el valor adoptado.
+$  2. ANALOGY. Zhang, Mao and Taskinen, Calphad 54 (2016) 107-116,
+$     assessed the analogous systems against data and obtained, at 2500 K:
+$        BaO-CaO   halite +57200   liquid  +8825   (ratio 6.5)
+$        BaO-SrO   halite +14717   liquid  ideal
+$     Applying the BaO-CaO ratio to the excess of our halite gives
+$     L(liquid) ~ 2000 J/mol, which is the value adopted here.
 $
-$ COTA DURA. Con L = 25000 el liquido tendria laguna de miscibilidad con
-$ Tc = L/2R = 1503 K, por encima de los 1178 K de la halita, es decir el
-$ fundido se desmezclaria antes que el cristal. Para evitar esa
-$ contradiccion hace falta L < 2R x 1178 = 19590 J/mol.
+$ HARD BOUND. With L = 25000 the liquid would have a miscibility gap at
+$ Tc = L/2R = 1503 K, above the 1178 K of the halite, that is, the melt
+$ would unmix before the crystal does. Avoiding that contradiction
+$ requires L < 2R x 1178 = 19590 J/mol.
 $
-$ ADVERTENCIA. Este valor es una ESTIMACION POR ANALOGIA, no una medida.
-$ No existe determinacion experimental del liquido CaO-SrO. Para el valor
-$ trazable a publicacion, usar CaSrO_opt.tdb.
+$ WARNING. This value is an ESTIMATE BY ANALOGY, not a measurement. No
+$ experimental determination of the CaO-SrO liquid exists. For the value
+$ traceable to a publication, use CaSrO_opt.tdb.
 $
-$ Lo que NO cambia respecto de CaSrO_opt.tdb: la laguna de la halita y sus
-$ parametros optimizados con PARROT, que son la parte validada.
+$ What does NOT change with respect to CaSrO_opt.tdb: the halite gap and
+$ its PARROT-optimized parameters, which are the validated part.
 $
 $ Output from Gibbs Energy System v6
 
@@ -199,20 +199,20 @@ $ ==== [Ca, O, Sr] ====
 
  PARAM L(LIQUID,CAO,SRO;0)     298.15 +2000;                     6000 N REF9 !
 
-$ Risold, Hallstedt, Gauckler, J Am Ceram Soc 80(3) (1997) 537-548 es la
-$ fuente de los valores de partida de la halita, reoptimizados aqui (REF8),
-$ y del valor 25000 del liquido que esta variante sustituye. Al no quedar
-$ ningun parametro que la cite directamente, no figura en la lista.
+$ Risold, Hallstedt, Gauckler, J Am Ceram Soc 80(3) (1997) 537-548 is the
+$ source of the halite starting values, reoptimized here (REF8), and of the
+$ liquid value 25000 that this variant replaces. As no parameter is left
+$ that cites it directly, it does not appear in the list below.
  LIST_OF_REFERENCES
  NUMBER      SOURCE
  REF1        'Deffrennes et al., Calphad 69 (2020) 101764'
  REF2        'Risold, Hallstedt, Gauckler, Calphad 20(3) (1996) 353-361'
  REF5        'Aljarrah, Medraj, Calphad 32 (2008) 240-251'
  REF6        'Dinsdale, Calphad 15(4) (1991) 317-425 (SGTE PURE5)'
- REF7        'Estimado en este trabajo por analogia con Ca-O'
- REF9        'Estimado en este trabajo por analogia con BaO-CaO y BaO-SrO
-              de Zhang, Mao, Taskinen, Calphad 54 (2016) 107-116.'
- REF8        'Reoptimizado en este trabajo con PARROT sobre los 15 puntos
-              de la laguna de miscibilidad medidos por Jacob y Waseda,
-              J Am Ceram Soc 81(4) (1998) 1065-1068. Partida: Risold 1997.'
+ REF7        'Estimated in this work by analogy with Ca-O'
+ REF9        'Estimated in this work by analogy with BaO-CaO and BaO-SrO
+              from Zhang, Mao, Taskinen, Calphad 54 (2016) 107-116.'
+ REF8        'Reoptimized in this work with PARROT on the 15 miscibility
+              gap points measured by Jacob and Waseda, J Am Ceram Soc
+              81(4) (1998) 1065-1068. Starting values: Risold 1997.'
   !

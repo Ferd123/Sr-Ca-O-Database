@@ -34,7 +34,7 @@ mpl.rcParams.update(
 )
 
 # =========================================================================
-# 1. PARSEAR ARCHIVO dos.exp
+# 1. PARSE FILE dos.exp
 # =========================================================================
 exp_path = "dos.exp"
 print(f"Reading file: {exp_path}")
@@ -104,7 +104,7 @@ print(f"Parsed {len(blocks)} data blocks.")
 # 2. CURVE RECONSTRUCTION (X_SrO = 2.0 * X_overall_Sr, X_CaO = 1.0 - X_SrO)
 # =========================================================================
 
-# A. Miscibility gap (Bloque 4 contains the complete dome)
+# A. Miscibility gap (Block 4 contains the complete dome)
 b_binodal = blocks[3] # Block 4
 seg_binodal = b_binodal["segments"][0]
 x_bin = seg_binodal[:, 0] * 2.0
@@ -128,8 +128,8 @@ x_left_CaO = 1.0 - x_left
 x_right_CaO = 1.0 - x_right
 X_peak_bin_CaO = 1.0 - X_peak_bin
 
-# B. Liquidus y Solidus (High Temperature)
-# Solidus: Block 6 y 7
+# B. Liquidus and Solidus (High Temperature)
+# Solidus: Blocks 6 and 7
 sol_pts = []
 for idx in [5, 6]:
     for seg in blocks[idx]["segments"]:
@@ -141,7 +141,7 @@ sol_pts = sol_pts[np.argsort(sol_pts[:, 0])]
 x_sol_CaO = 1.0 - sol_pts[:, 0]
 y_sol = sol_pts[:, 1]
 
-# Liquidus: Block 8 y 9
+# Liquidus: Blocks 8 and 9
 liq_pts = []
 for idx in [7, 8]:
     for seg in blocks[idx]["segments"]:
@@ -165,7 +165,7 @@ exp_data_AGAPT = [
 exp_t_agapt = [pt[0] for pt in exp_data_AGAPT]
 exp_x_agapt_CaO = [pt[1] for pt in exp_data_AGAPT]
 
-# Jacob data (2000) - AGAP a 1100 K. Composición en x_CaO
+# Jacob data (2000) - AGAP at 1100 K. Composition in x_CaO
 exp_data_AGAP = [
     (1100, 0.760), (1100, 0.288)
 ]
@@ -178,15 +178,15 @@ exp_x_agap_CaO = [pt[1] for pt in exp_data_AGAP]
 fig, ax = plt.subplots(figsize=(8, 6), dpi=600)
 
 # A. Plotting Calculated Curves (with X_CaO bottom axis)
-# Laguna de Miscibilidad (Binodal)
+# Miscibility Gap (Binodal)
 ax.plot(x_bin_CaO, y_bin, color="#1f77b4", linestyle="-", linewidth=1.8, label="Calculated Binodal (Halite)")
 
-# Liquidus y Solidus
+# Liquidus and Solidus
 ax.plot(x_liq_CaO, y_liq, color="#d62728", linestyle="-", linewidth=1.5, label="Calculated Liquidus")
 ax.plot(x_sol_CaO, y_sol, color="#e377c2", linestyle="--", linewidth=1.2, label="Calculated Solidus")
 
 # B. Shading of Phase Regions
-# 1. Miscibility gap (Halita#1 + Halita#2)
+# 1. Miscibility gap (Halite#1 + Halite#2)
 T_grid_bin = np.linspace(800, T_max_bin, 300)
 # Interpolate using temperature-sorted branches
 sort_l = np.argsort(T_left)
@@ -196,7 +196,7 @@ X_r_interp = np.interp(T_grid_bin, T_right[sort_r], x_right_CaO[sort_r])
 # Note: since CaO is 1 - SrO, the left branch (CaO-rich) has larger X_CaO values than the right branch (SrO-rich)
 ax.fill_betweenx(T_grid_bin, X_r_interp, X_l_interp, color="#1f77b4", alpha=0.08)
 
-# 2. Coexistence region L + Halite (very narrow, ~0.15 K de ancho)
+# 2. Coexistence region L + Halite (very narrow, ~0.15 K wide)
 T_grid_high = np.linspace(2870.4, 3222.5, 500)
 X_sol_interp = np.interp(T_grid_high, y_sol, x_sol_CaO)
 X_liq_interp = np.interp(T_grid_high, y_liq, x_liq_CaO)

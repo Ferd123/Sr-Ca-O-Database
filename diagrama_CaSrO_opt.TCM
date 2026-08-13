@@ -1,17 +1,17 @@
 @@ =========================================================================
 @@ diagrama_CaSrO_opt.TCM
-@@ Calculo y trazado del diagrama pseudobinario CaO-SrO
-@@ utilizando la base de datos optimizada CaSrO_opt.tdb
+@@ Calculation and plotting of the CaO-SrO pseudobinary diagram
+@@ using the optimized database CaSrO_opt.tdb
 @@
-@@ Instrucciones de ejecucion en Thermo-Calc (Console Mode):
-@@   1. File -> Set Working Directory... -> seleccionar la carpeta del proyecto
+@@ How to run it in Thermo-Calc (Console Mode):
+@@   1. File -> Set Working Directory... -> select the project folder
 @@   2. macro_file_open diagrama_CaSrO_opt.TCM
 @@ =========================================================================
 
 set-echo
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 1 - Carga de la base de datos optimizada
+@@ BLOCK 1 - Loading the optimized database
 @@ -------------------------------------------------------------------------
 go data
 switch-database USER CaSrO_opt.tdb
@@ -22,10 +22,10 @@ list-system constituent
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 2 - Configuracion del corte pseudobinario CaO-SrO (X(O) = 0.5)
-@@            X(SR) varia de 0 (CaO puro) a 0.5 (SrO puro).
-@@            Se inicia a 1100 K y X(SR) = 0.2 (dentro de la laguna)
-@@            para que la minimizacion global cree las dos halitas.
+@@ BLOCK 2 - Setting up the CaO-SrO pseudobinary section (X(O) = 0.5)
+@@           X(SR) runs from 0 (pure CaO) to 0.5 (pure SrO).
+@@           It starts at 1100 K and X(SR) = 0.2 (inside the gap) so that
+@@           global minimization creates the two halite composition sets.
 @@ -------------------------------------------------------------------------
 go poly_3
 change-status phase BCC_A2 FCC_A1 CAO2 SRO2 GAS = suspended
@@ -36,9 +36,10 @@ list-equilibrium ,,,,
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 3 - Mapeo del diagrama de fases
-@@            Eje 1: X(SR) de 0 a 0.5 (fraccion atómica de Sr)
-@@            Eje 2: Temperatura T de 300 K a 3400 K (desde temperatura ambiente)
+@@ BLOCK 3 - Mapping the phase diagram
+@@           Axis 1: X(SR) from 0 to 0.5 (atomic fraction of Sr)
+@@           Axis 2: temperature T from 300 K to 3400 K (from room
+@@           temperature upwards)
 @@ -------------------------------------------------------------------------
 set-axis-variable 1 X(SR) 0 0.5,,,
 set-axis-variable 2 T 300 3400,,,
@@ -48,12 +49,12 @@ map
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 4 - Graficacion y desplegado del diagrama
+@@ BLOCK 4 - Plotting and displaying the diagram
 @@ -------------------------------------------------------------------------
 post
 set-diagram-axis x X(SR)
 set-diagram-axis y T
-set-title Diagrama Pseudobinario CaO-SrO (Optimizado PARROT),,
+set-title CaO-SrO Pseudobinary Diagram (PARROT Optimized),,
 plot
 
 set-inter

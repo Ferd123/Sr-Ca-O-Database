@@ -1,25 +1,25 @@
 @@ =========================================================================
-@@ validar_CaSrO.TCM  -  validacion de CaSrO.TDB en Console Mode
+@@ validar_CaSrO.TCM  -  validation of CaSrO.TDB in Console Mode
 @@
-@@ IMPORTANTE: la carpeta "TDB 1" tiene un ESPACIO en el nombre, y el
-@@ comando SWITCH_DATABASE de Console Mode no acepta rutas entre comillas.
-@@ Por eso el macro usa el nombre del archivo a secas y hay que ejecutarlo
-@@ con la carpeta del proyecto como directorio de trabajo:
+@@ IMPORTANT: the folder "TDB 1" has a SPACE in its name, and the Console
+@@ Mode command SWITCH_DATABASE does not accept quoted paths. That is why
+@@ the macro uses the bare file name, and it must be run with the project
+@@ folder as the working directory:
 @@
-@@   Console Mode -> menu File -> Set Working Directory... -> "TDB 1"
-@@   luego:  macro_file_open validar_CaSrO.TCM
+@@   Console Mode -> File menu -> Set Working Directory... -> "TDB 1"
+@@   then:  macro_file_open validar_CaSrO.TCM
 @@
-@@ Sintaxis verificada contra los macros de ejemplo que trae Thermo-Calc
-@@ 2025a (Examples\Console-Mode\Thermo-Calc) y contra el Database Manager
-@@ User Guide del Documentation Set.
+@@ Syntax checked against the example macros shipped with Thermo-Calc
+@@ 2025a (Examples\Console-Mode\Thermo-Calc) and against the Database
+@@ Manager User Guide of the Documentation Set.
 @@ =========================================================================
 
 set-echo
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 1 - carga de la base
-@@ Si hay un error de sintaxis en el TDB, falla aqui y Thermo-Calc indica
-@@ la linea. LIST-SYSTEM CONSTITUENT debe mostrar 7 fases:
+@@ BLOCK 1 - loading the database
+@@ If there is a syntax error in the TDB it fails here and Thermo-Calc
+@@ points to the line. LIST-SYSTEM CONSTITUENT must show 7 phases:
 @@ LIQUID, HALITE, CAO2, SRO2, FCC_A1, BCC_A2, GAS
 @@ -------------------------------------------------------------------------
 go da
@@ -31,9 +31,9 @@ list-system constituent
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 2 - fusion congruente de CaO.   ESPERADO: 3222.0 K
-@@ GAS se suspende porque esta incompleta (ver NOTA 6 del TDB).
-@@ Con 3 componentes hacen falta 5 condiciones: P, N, x(SR), x(O), T.
+@@ BLOCK 2 - congruent melting of CaO.   EXPECTED: 3222.0 K
+@@ GAS is suspended because it is incomplete (see NOTE 6 of the TDB).
+@@ With 3 components 5 conditions are needed: P, N, x(SR), x(O), T.
 @@ -------------------------------------------------------------------------
 go p-3
 c-st p gas=sus
@@ -47,7 +47,7 @@ l-e,,,,
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 3 - fusion congruente de SrO.   ESPERADO: 2870.5 K
+@@ BLOCK 3 - congruent melting of SrO.   EXPECTED: 2870.5 K
 @@ -------------------------------------------------------------------------
 c-st p liquid=ent 1
 s-c t=2800 x(sr)=0.5 x(o)=0.5
@@ -60,9 +60,9 @@ l-e,,,,
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 4 - diagrama de fases Ca-O  (x(SR) = 0, GAS suspendida)
-@@ VERIFICAR: eutectico bcc-Ca + CaO cerca de 1094 K y 1.7 at.% O,
-@@ y fusion de CaO en 3222 K.
+@@ BLOCK 4 - Ca-O phase diagram  (x(SR) = 0, GAS suspended)
+@@ CHECK: bcc-Ca + CaO eutectic near 1094 K and 1.7 at.% O, and melting of
+@@ CaO at 3222 K.
 @@ -------------------------------------------------------------------------
 c-st p liquid=ent 1
 s-c p=1e5 n=1 x(sr)=0 x(o)=0.3 t=2000
@@ -74,24 +74,24 @@ map
 post
 s-d-a x x(o)
 s-d-a y t
-set-title Ca-O calculado con CaSrO.TDB,,
+set-title Ca-O calculated with CaSrO.TDB,,
 plot
 
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 5 - pseudobinario CaO-SrO   (x(O) = 0.5 fijo)
-@@ En este corte x(SR) va de 0 (CaO puro) a 0.5 (SrO puro), y la fraccion
-@@ de SrO en la halita es  x_SrO = 2*x(SR).
+@@ BLOCK 5 - CaO-SrO pseudobinary   (x(O) = 0.5 fixed)
+@@ In this section x(SR) runs from 0 (pure CaO) to 0.5 (pure SrO), and the
+@@ SrO fraction in the halite is  x_SrO = 2*x(SR).
 @@
-@@ El punto de partida se pone DENTRO de la laguna de miscibilidad
-@@ (1100 K, x(SR) = 0.2, o sea x_SrO = 0.4) para que la minimizacion
-@@ global cree sola la segunda composicion de la halita.
+@@ The starting point is placed INSIDE the miscibility gap (1100 K,
+@@ x(SR) = 0.2, that is x_SrO = 0.4) so that global minimization creates
+@@ the second halite composition set by itself.
 @@
-@@ VERIFICAR: laguna a 1100 K entre x(SR) = 0.116 y 0.348
-@@            (o sea x_SrO = 0.232 y 0.696; experimental 0.240 y 0.710),
-@@            cierre de la laguna cerca de 1180 K,
-@@            liquidus entre 2870 K (SrO) y 3222 K (CaO).
+@@ CHECK: gap at 1100 K between x(SR) = 0.116 and 0.348
+@@        (that is x_SrO = 0.232 and 0.696; experimental 0.240 and 0.710),
+@@        closure of the gap near 1180 K,
+@@        liquidus between 2870 K (SrO) and 3222 K (CaO).
 @@ -------------------------------------------------------------------------
 go p-3
 s-c p=1e5 n=1 x(o)=0.5 x(sr)=0.2 t=1100
@@ -104,15 +104,15 @@ map
 post
 s-d-a x x(sr)
 s-d-a y t
-set-title Pseudobinario CaO-SrO,,
+set-title CaO-SrO pseudobinary,,
 plot
 
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 6 - binario metalico Ca-Sr   (sin oxigeno)
-@@ VERIFICAR: soluciones solidas continuas fcc y bcc, fusion de Ca en
-@@ 1115 K y de Sr en 1050 K, sin fases intermedias.
+@@ BLOCK 6 - metallic Ca-Sr binary   (no oxygen)
+@@ CHECK: continuous fcc and bcc solid solutions, melting of Ca at 1115 K
+@@ and of Sr at 1050 K, no intermediate phases.
 @@ -------------------------------------------------------------------------
 go p-3
 c-st p *=ent 1
@@ -127,15 +127,15 @@ map
 post
 s-d-a x x(sr)
 s-d-a y t
-set-title Binario metalico Ca-Sr,,
+set-title Metallic Ca-Sr binary,,
 plot
 
 @&
 
 @@ -------------------------------------------------------------------------
-@@ BLOQUE 7 - estabilidad de los peroxidos frente a pO2
-@@ Descomposicion CaO2 -> CaO + O2. [1] la calcula en 163 K a 1 bar.
-@@ Aqui se recorre la temperatura de descomposicion contra log10(pO2).
+@@ BLOCK 7 - stability of the peroxides against pO2
+@@ Decomposition CaO2 -> CaO + O2. [1] computes it at 163 K and 1 bar.
+@@ Here the decomposition temperature is traced against log10(pO2).
 @@ -------------------------------------------------------------------------
 go p-3
 c-st p *=ent 1
@@ -149,12 +149,12 @@ l-e,,,,
 set-inter
 
 @@ =========================================================================
-@@ Notas
+@@ Notes
 @@
-@@ - Si Thermo-Calc se queja de x = 0 exacto en los bloques 2, 3, 4 o 6,
-@@   cambia el cero por 1e-6; el resultado no se mueve de forma apreciable.
-@@ - Los archivos CaO_diag.POLY3, CaOSrO_diag.POLY3 y CaSr_diag.POLY3 se
-@@   guardan en el directorio de trabajo; puedes reabrirlos con
-@@   READ_WORKSPACES sin recalcular el MAP.
-@@ - SAVE antes de MAP es obligatorio: MAP escribe sobre el workspace.
+@@ - If Thermo-Calc complains about an exact x = 0 in blocks 2, 3, 4 or 6,
+@@   replace the zero with 1e-6; the result does not move appreciably.
+@@ - The files CaO_diag.POLY3, CaOSrO_diag.POLY3 and CaSr_diag.POLY3 are
+@@   saved in the working directory; they can be reopened with
+@@   READ_WORKSPACES without recomputing the MAP.
+@@ - SAVE before MAP is mandatory: MAP writes over the workspace.
 @@ =========================================================================

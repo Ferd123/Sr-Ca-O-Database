@@ -64,24 +64,24 @@ exp_x = [pt[1] for pt in exp_data]
 plt.figure(figsize=(10, 7), dpi=300)
 
 # Liquidus & Solidus
-plt.plot(x_l, t_liquidus, 'r-', linewidth=2, label='Líquido / Líquidus')
-plt.plot(x_l, t_solidus, 'r--', linewidth=1.8, label='Sólidus Halita')
+plt.plot(x_l, t_liquidus, 'r-', linewidth=2, label='Liquid / Liquidus')
+plt.plot(x_l, t_solidus, 'r--', linewidth=1.8, label='Halite Solidus')
 
 # Miscibility gap
-plt.plot(x_cao_b1, valid_t, 'b-', linewidth=2.2, label='Binodal Halita (300 K - 1170 K)')
+plt.plot(x_cao_b1, valid_t, 'b-', linewidth=2.2, label='Halite Binodal (300 K - 1170 K)')
 plt.plot(x_cao_b2, valid_t, 'b-', linewidth=2.2)
 
 # Region text labels
-plt.text(0.5, 2000, 'Solución Sólida Homogénea\nHalita (Ca,Sr)O', fontsize=12, ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8))
-plt.text(0.5, 700, 'Laguna de Miscibilidad\nHalita#1 + Halita#2', fontsize=11, ha='center', color='darkblue', bbox=dict(boxstyle='round,pad=0.4', facecolor='aliceblue', alpha=0.9))
-plt.text(0.5, 3150, 'LÍQUIDO', fontsize=12, fontweight='bold', ha='center', color='darkred')
+plt.text(0.5, 2000, 'Homogeneous Solid Solution\nHalite (Ca,Sr)O', fontsize=12, ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8))
+plt.text(0.5, 700, 'Miscibility Gap\nHalite#1 + Halite#2', fontsize=11, ha='center', color='darkblue', bbox=dict(boxstyle='round,pad=0.4', facecolor='aliceblue', alpha=0.9))
+plt.text(0.5, 3150, 'LIQUID', fontsize=12, fontweight='bold', ha='center', color='darkred')
 
 # Experimental points
-plt.scatter(exp_x, exp_t, color='crimson', s=45, zorder=5, label='Datos Experimentales (880-1128 K)')
+plt.scatter(exp_x, exp_t, color='crimson', s=45, zorder=5, label='Experimental Data (880-1128 K)')
 
-plt.title('Diagrama de Fases Completo CaO-SrO (300 K a 3400 K)\nBase Optimizada CaSrO_opt.tdb', fontsize=14, fontweight='bold', pad=12)
-plt.xlabel('Fracción Molar de CaO, $x_{\mathrm{CaO}}$', fontsize=12)
-plt.ylabel('Temperatura $T$ (K)', fontsize=12)
+plt.title('Complete CaO-SrO Phase Diagram (300 K to 3400 K)\nOptimized database CaSrO_opt.tdb', fontsize=14, fontweight='bold', pad=12)
+plt.xlabel(r'Mole Fraction of CaO, $x_{\mathrm{CaO}}$', fontsize=12)
+plt.ylabel('Temperature $T$ (K)', fontsize=12)
 
 plt.xlim(0, 1)
 plt.ylim(300, 3400)

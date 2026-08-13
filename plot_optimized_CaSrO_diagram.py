@@ -61,16 +61,16 @@ exp_agap_x_cao = [1 - 0.240, 1 - 0.712] # x(CaO) = 0.760 y 0.288
 plt.figure(figsize=(9, 6.5), dpi=300)
 
 # Miscibility gap curve
-plt.plot(x_cao_branch1, valid_t, 'b-', linewidth=2.2, label='Binodal calculada (CaSrO_opt.tdb)')
+plt.plot(x_cao_branch1, valid_t, 'b-', linewidth=2.2, label='Calculated binodal (CaSrO_opt.tdb)')
 plt.plot(x_cao_branch2, valid_t, 'b-', linewidth=2.2)
 
 # Experimental points
-plt.scatter(exp_x_cao, exp_t, color='red', s=45, zorder=5, label='Datos AGAPT (Risold 1997)')
-plt.scatter(exp_agap_x_cao, exp_agap_t, color='darkgreen', marker='s', s=55, zorder=5, label='Datos AGAP (Jacob 2000)')
+plt.scatter(exp_x_cao, exp_t, color='red', s=45, zorder=5, label='AGAPT data (Risold 1997)')
+plt.scatter(exp_agap_x_cao, exp_agap_t, color='darkgreen', marker='s', s=55, zorder=5, label='AGAP data (Jacob 2000)')
 
-plt.title('Diagrama Pseudobinario CaO-SrO\nLaguna de Miscibilidad de la Halita (Ca,Sr)O', fontsize=14, fontweight='bold', pad=12)
-plt.xlabel('Fracción Molar de CaO, $x_{\mathrm{CaO}}$', fontsize=12)
-plt.ylabel('Temperatura $T$ (K)', fontsize=12)
+plt.title('CaO-SrO Pseudobinary Diagram\nMiscibility Gap of the Halite (Ca,Sr)O', fontsize=14, fontweight='bold', pad=12)
+plt.xlabel(r'Mole Fraction of CaO, $x_{\mathrm{CaO}}$', fontsize=12)
+plt.ylabel('Temperature $T$ (K)', fontsize=12)
 
 plt.xlim(0, 1)
 plt.ylim(800, 1250)

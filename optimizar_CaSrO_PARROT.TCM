@@ -1,33 +1,33 @@
 @@ =========================================================================
 @@ optimizar_CaSrO_PARROT.TCM
-@@ Reoptimizacion de la halita (Ca,Sr)O con PARROT.
+@@ Reoptimization of the halite (Ca,Sr)O with PARROT.
 @@
-@@ Ejecutar con el directorio de trabajo puesto en la carpeta del
-@@ proyecto:  File -> Set Working Directory...
-@@ luego:     macro_file_open optimizar_CaSrO_PARROT.TCM
+@@ Run it with the working directory set to the project folder:
+@@            File -> Set Working Directory...
+@@ then:      macro_file_open optimizar_CaSrO_PARROT.TCM
 @@
-@@ Sintaxis calcada de tcex36a.TCM y tcex36b.TCM, que son una corrida de
-@@ PARROT completa que funciona.
+@@ Syntax copied from tcex36a.TCM and tcex36b.TCM, which are a complete
+@@ PARROT run that works.
 @@
 @@ -------------------------------------------------------------------------
-@@ QUE SE OPTIMIZA Y QUE NO
+@@ WHAT IS OPTIMIZED AND WHAT IS NOT
 @@
 @@   V1, V2 -> L(HALITE,CA,SR:O;0) = V1 + V2*T
 @@   V3     -> L(HALITE,CA,SR:O;1) = V3
 @@
-@@ Y NADA MAS. L(LIQUID,CAO,SRO;0) no se toca: no existe ningun dato
-@@ experimental del liquido CaO-SrO que lo restrinja, asi que meterlo a
-@@ optimizar solo lo haria vagar sin control. Ver el encabezado de
+@@ AND NOTHING ELSE. L(LIQUID,CAO,SRO;0) is not touched: no experimental
+@@ datum on the CaO-SrO liquid exists to constrain it, so putting it into
+@@ the optimization would only let it wander unchecked. See the header of
 @@ CaSrO.POP.
 @@
-@@ Valores de partida = los de Risold et al. 1997, Tabla VI:
+@@ Starting values = those of Risold et al. 1997, Table VI:
 @@   L = 23000 - 3*T + 1185*(y_Ca - y_Sr)
 @@ =========================================================================
 
 set-echo
 
 @@ -------------------------------------------------------------------------
-@@ 1. Cargar la base
+@@ 1. Load the database
 @@ -------------------------------------------------------------------------
 go data
 switch-database USER CaSrO.TDB
@@ -37,32 +37,32 @@ get-data
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 2. GES: crear el SEGUNDO CONJUNTO DE COMPOSICION de la halita
+@@ 2. GES: create the SECOND COMPOSITION SET of the halite
 @@
-@@ Sin esta linea, CHANGE_STATUS PHASE HALITE#1,HALITE#2 falla con
+@@ Without this line, CHANGE_STATUS PHASE HALITE#1,HALITE#2 fails with
 @@     *** ERROR 1110 IN GSPHS: ILLEGAL COMPOSITION SET NUMBER
-@@ y la compilacion de experimentos se aborta en el primer equilibrio.
-@@ El ultimo argumento es el constituyente mayoritario del conjunto 2.
+@@ and the compilation of experiments aborts at the first equilibrium.
+@@ The last argument is the major constituent of composition set 2.
 @@
-@@ OJO CON EL NOMBRE DEL MODULO: "go ges" NO EXISTE. Thermo-Calc responde
-@@ NO SUCH MODULE y se queda esperando en el prompt MODULE NAME:, con lo
-@@ que se traga la linea siguiente del macro y el AMEND_PHASE nunca se
-@@ ejecuta. El modulo se llama GIBBS_ENERGY_SYSTEM.
+@@ BEWARE OF THE MODULE NAME: "go ges" DOES NOT EXIST. Thermo-Calc answers
+@@ NO SUCH MODULE and waits at the MODULE NAME: prompt, which swallows the
+@@ next line of the macro, so AMEND_PHASE is never executed. The module is
+@@ called GIBBS_ENERGY_SYSTEM.
 @@ -------------------------------------------------------------------------
-@@ AMEND_PHASE ... COMPOSITION_SETS pide el constituyente mayoritario de
-@@ CADA subred. HALITE tiene dos, (Ca,Sr)1(O)1, asi que hay que dar los
-@@ dos: "SR O". Con solo "SR" se queda preguntando por la subred 2 y se
-@@ traga la linea siguiente del macro.
-@@ Y hay que declarar tambien el mayoritario del conjunto 1, si no
-@@ SET_ALL_START del POP abre un prompt pidiendo Y(HALITE#1,CA) y se
-@@ traga los comentarios del POP (ERROR 1034 IN GETREL: NO DIGIT).
-@@ En tcex36 hacen exactamente esto: COMPOSITION_SETS y luego MAJOR.
-@@ UNA RESPUESTA POR LINEA. Estos dos comandos abren un prompt por cada
-@@ subred y no se sabe de antemano cuantos argumentos aceptan en linea:
-@@ "composition_sets 2 SR O" dejo abierto el prompt de la subred 2 y se
-@@ comio la linea siguiente. Poniendo cada respuesta en su renglon, el
-@@ peor caso es un inofensivo "NO SUCH COMMAND" si algun prompt no sale,
-@@ en vez de que se pierda un comando entero.
+@@ AMEND_PHASE ... COMPOSITION_SETS asks for the major constituent of EACH
+@@ sublattice. HALITE has two, (Ca,Sr)1(O)1, so both must be given:
+@@ "SR O". With "SR" alone it keeps asking for sublattice 2 and swallows
+@@ the next line of the macro.
+@@ The major constituent of set 1 must be declared as well, otherwise
+@@ SET_ALL_START of the POP opens a prompt asking for Y(HALITE#1,CA) and
+@@ swallows the POP comments (ERROR 1034 IN GETREL: NO DIGIT).
+@@ tcex36 does exactly this: COMPOSITION_SETS and then MAJOR.
+@@ ONE ANSWER PER LINE. These two commands open one prompt per sublattice
+@@ and it is not known in advance how many arguments they accept inline:
+@@ "composition_sets 2 SR O" left the sublattice 2 prompt open and ate the
+@@ next line. With one answer per line, the worst case is a harmless
+@@ "NO SUCH COMMAND" if some prompt does not appear, instead of losing a
+@@ whole command.
 go GIBBS_ENERGY_SYSTEM
 amend_phase HALITE composition_sets 2
 SR
@@ -76,44 +76,44 @@ ALL
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 3. PARROT: reescribir los parametros de la halita con variables
+@@ 3. PARROT: rewrite the halite parameters in terms of variables
 @@
-@@ En el TDB estan como numeros fijos. PARROT solo puede optimizar lo que
-@@ este escrito en terminos de V1, V2, ... Estas dos lineas sustituyen los
-@@ parametros cargados desde el TDB por sus versiones parametrizadas.
+@@ In the TDB they are fixed numbers. PARROT can only optimize what is
+@@ written in terms of V1, V2, ... These two lines replace the parameters
+@@ loaded from the TDB by their parametrized versions.
 @@ -------------------------------------------------------------------------
 go parrot
 enter-parameter L(HALITE,CA,SR:O;0) 298.15 V1+V2*T; 3000 N
 enter-parameter L(HALITE,CA,SR:O;1) 298.15 V3; 3000 N
 
-@@ Comprobar que quedaron escritos en funcion de V1, V2 y V3.
-@@ El nombre completo LIST-PARAMETER-DATA sale AMBIGUOUS en PARROT;
-@@ la abreviatura que usa el ejemplo oficial es l-p-d.
+@@ Check that they were written as functions of V1, V2 and V3.
+@@ The full name LIST-PARAMETER-DATA comes out AMBIGUOUS in PARROT; the
+@@ abbreviation used by the official example is l-p-d.
 l-p-d HALITE
 
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 4. Archivo de trabajo y compilacion de los experimentos
-@@ COMPILE lleva todos sus argumentos en la misma linea:
-@@     COMPILE <archivo POP> <salida> <iniciar store> <archivo .exp>
+@@ 4. Work file and compilation of the experiments
+@@ COMPILE takes all its arguments on the same line:
+@@     COMPILE <POP file> <output> <initiate store> <.exp file>
 @@
-@@ ANTES DE VOLVER A CORRER ESTE MACRO, BORRA CaSrO_opt.PAR. Si el
-@@ archivo ya existe, CREATE pregunta si sobreescribir y esa pregunta se
-@@ come la linea siguiente del macro, que es justo el problema que
-@@ acabamos de arreglar en el paso 2.
+@@ BEFORE RUNNING THIS MACRO AGAIN, DELETE CaSrO_opt.PAR. If the file
+@@ already exists, CREATE asks whether to overwrite and that question eats
+@@ the next line of the macro, which is exactly the problem just fixed in
+@@ step 2.
 @@ -------------------------------------------------------------------------
-@@ Tienen que compilar 29 equilibrios: 1 de AGAP, 13 de AGAPT (numerados
-@@ 201 a 213 por orden de temperatura), 12 de ALIQ (21 a 32) y 2 de AMLT
-@@ (100 y 101). Si sale un numero menor, algun equilibrio no convergio al
-@@ compilarse y hay que arreglar su SET_START_VALUE.
+@@ 29 equilibria must compile: 1 from AGAP, 13 from AGAPT (numbered 201 to
+@@ 213 in order of temperature), 12 from ALIQ (21 to 32) and 2 from AMLT
+@@ (100 and 101). A smaller number means some equilibrium did not converge
+@@ on compilation and its SET_START_VALUE needs fixing.
 create CaSrO_opt
 compile CaSrO.POP screen Y CaSrO_exp
 
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 5. Valores de partida (Risold 1997)
+@@ 5. Starting values (Risold 1997)
 @@ -------------------------------------------------------------------------
 s-o-v 1 23000,,,,,,
 s-o-v 2 -3,,,,,,
@@ -124,19 +124,19 @@ list-all-variables
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 6. Peso cero a los bloques de verificacion
+@@ 6. Zero weight on the verification blocks
 @@
-@@ ALIQ (liquidus Ca-CaO) y AMLT (fusiones) reproducen parametros de
-@@ Deffrennes y de Risold que no estamos optimizando. Si se dejan con
-@@ peso, contaminan la suma de cuadrados sin que ninguna variable pueda
-@@ mejorarlos.
+@@ ALIQ (Ca-CaO liquidus) and AMLT (melting points) reproduce parameters
+@@ of Deffrennes and of Risold that are not being optimized. If left with
+@@ weight, they contaminate the sum of squares without any variable being
+@@ able to improve them.
 @@
-@@ OJO: SET_WEIGHT va DENTRO del modulo de edicion de experimentos, no en
-@@ el prompt de PARROT.
+@@ NOTE: SET_WEIGHT goes INSIDE the experiment editing module, not at the
+@@ PARROT prompt.
 @@ -------------------------------------------------------------------------
-@@ Aqui hay que leer las dos cuentas: "Changed weight on 12 equilibria"
-@@ para ALIQ y "on 2" para AMLT. Cualquier otro numero significa que esos
-@@ equilibrios no estan en memoria.
+@@ Two counts must be read here: "Changed weight on 12 equilibria" for
+@@ ALIQ and "on 2" for AMLT. Any other number means those equilibria are
+@@ not in memory.
 edit_experiments
 read 1
 s-we 0 ALIQ
@@ -148,27 +148,27 @@ back
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 7. Comprobacion antes de optimizar
+@@ 7. Check before optimizing
 @@
-@@ OPT 0 no mueve nada: solo calcula todos los equilibrios con los valores
-@@ de partida y reporta la suma de cuadrados. Si aqui salen errores de
-@@ convergencia, no tiene sentido optimizar todavia.
+@@ OPT 0 moves nothing: it only computes all the equilibria with the
+@@ starting values and reports the sum of squares. If convergence errors
+@@ appear here, there is no point optimizing yet.
 @@
-@@ Con los parametros de Risold la base ya da la laguna en x_SrO =
-@@ 0.232 / 0.696 contra 0.240 / 0.712 experimental, asi que la suma de
-@@ cuadrados de partida deberia ser pequena y bajar poco.
+@@ With the Risold parameters the database already gives the gap at
+@@ x_SrO = 0.232 / 0.696 against 0.240 / 0.712 experimental, so the initial
+@@ sum of squares should be small and should drop little.
 @@
-@@ CIFRA CONCRETA QUE HAY QUE VER AQUI: 14.07, repartida en 12.72 del
-@@ bloque AGAP (los 2 puntos de 1100 K, con la incertidumbre estrecha) y
-@@ 1.35 de AGAPT (los 13 puntos digitalizados). Calculada a mano fuera de
-@@ Thermo-Calc; el 12.72 ya salio identico en una corrida anterior.
+@@ THE CONCRETE FIGURE TO LOOK FOR HERE: 14.07, split into 12.72 from the
+@@ AGAP block (the 2 points at 1100 K, with the narrow uncertainty) and
+@@ 1.35 from AGAPT (the 13 digitized points). Computed by hand outside
+@@ Thermo-Calc; the 12.72 already came out identical in an earlier run.
 @@
-@@ Si en vez de 14 salen miles, NO son los parametros: son los
-@@ equilibrios que no convergieron o los dos conjuntos de composicion que
-@@ colapsaron en uno solo. Mirar si hay ERROR 1611 IN QTHISS y en que
-@@ numero de equilibrio (201 a 213 son la laguna, por orden de
-@@ temperatura de 880 a 1128 K), y corregir el SET_START_VALUE de ese
-@@ equilibrio en el POP.
+@@ If thousands come out instead of 14, it is NOT the parameters: it is
+@@ equilibria that did not converge, or the two composition sets that
+@@ collapsed into one. Look for ERROR 1611 IN QTHISS and at which
+@@ equilibrium number (201 to 213 are the gap, in order of temperature
+@@ from 880 to 1128 K), and fix the SET_START_VALUE of that equilibrium in
+@@ the POP.
 @@ -------------------------------------------------------------------------
 opt 0
 l-r C SCREEN
@@ -176,7 +176,7 @@ l-r C SCREEN
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 8. Optimizar (100 iteraciones por ciclo)
+@@ 8. Optimize (100 iterations per cycle)
 @@ -------------------------------------------------------------------------
 set-optimizing-conditions MAXFUN 100
 opt 100
@@ -186,9 +186,9 @@ l-r C SCREEN
 @&
 
 @@ -------------------------------------------------------------------------
-@@ 9. Reescalar y volver a optimizar
-@@ RESCALE pone los valores actuales como nuevos valores de partida; sin
-@@ eso, las desviaciones estandar que reporta PARROT no son fiables.
+@@ 9. Rescale and optimize again
+@@ RESCALE sets the current values as the new starting values; without it,
+@@ the standard deviations PARROT reports are not reliable.
 @@ -------------------------------------------------------------------------
 resc
 opt 100
@@ -198,23 +198,24 @@ list-all-variables
 set-inter
 
 @@ =========================================================================
-@@ Como leer el resultado
+@@ How to read the result
 @@
-@@ - THE SUM OF SQUARES HAS CHANGED FROM x TO y: si y no baja de forma
-@@   apreciable, el juego de Risold ya era bueno y no hay nada que ganar.
-@@   Y eso es lo que se espera: son los mismos datos a los que Risold
-@@   ajusto. "SUM OF SQUARES FAILS TO DECREASE" partiendo de 14 NO es un
-@@   fallo, es el resultado. Partiendo de 30000 si lo es.
-@@ - REL.STAND.DEV de cada variable: si es del orden de la propia
-@@   variable, ese parametro no esta determinado por los datos y conviene
-@@   fijarlo con S-F-V en vez de optimizarlo. Ojo con V2 (el termino en T
-@@   de L0): 15 puntos en solo 250 K de rango lo determinan mal.
-@@ - DEGREES OF FREEDOM debe ser POSITIVO. Son 15 experimentos con peso
-@@   (2 de AGAP y 13 de AGAPT) contra 3 variables: 12 grados de libertad.
-@@   Si sale negativo es que no se compilaron los experimentos.
+@@ - THE SUM OF SQUARES HAS CHANGED FROM x TO y: if y does not drop
+@@   appreciably, the Risold set was already good and there is nothing to
+@@   gain. And that is what is expected: these are the same data Risold
+@@   fitted. "SUM OF SQUARES FAILS TO DECREASE" starting from 14 is NOT a
+@@   failure, it is the result. Starting from 30000 it is.
+@@ - REL.STAND.DEV of each variable: if it is of the order of the variable
+@@   itself, that parameter is not determined by the data and is better
+@@   fixed with S-F-V than optimized. Watch V2 (the T term of L0):
+@@   15 points over a range of only 250 K determine it poorly.
+@@ - DEGREES OF FREEDOM must be POSITIVE. There are 15 weighted
+@@   experiments (2 from AGAP and 13 from AGAPT) against 3 variables:
+@@   12 degrees of freedom. A negative value means the experiments were
+@@   not compiled.
 @@
-@@ Para escribir el resultado a un TDB nuevo:
+@@ To write the result to a new TDB:
 @@     go ges
 @@     list_data
-@@     (responder N y dar el nombre del archivo)
+@@     (answer N and give the file name)
 @@ =========================================================================
