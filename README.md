@@ -107,8 +107,8 @@ assumed it ideal by analogy with Ba-O and Ca-O), `L(LIQUID,SR,SRO) = 0` **exactl
 
 ### 4.2 Erratum in the published SrO parameters
 
-The `T·ln(T)` coefficient of `G_SrO(cr)` is **47.56**, not 47.36. The parsed markdown
-of the paper (OCR of a 1996 scan) gave 47.36.
+The `T·ln(T)` coefficient of `G_SrO(cr)` is **47.56**, not 47.36. Some digital
+transcriptions of the paper incorrectly gave 47.36.
 
 | Coefficient | S°(298.15) | Δ_fH(298.15) |
 |---|---|---|
