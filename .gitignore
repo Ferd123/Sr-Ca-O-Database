@@ -1,53 +1,54 @@
 # ============================================================================
-# .gitignore - repositorio Ca-Sr-O
+# .gitignore - Ca-Sr-O repository
 # ----------------------------------------------------------------------------
-# Estrategia de LISTA BLANCA: se ignora todo por defecto y se van des-ignorando
-# solo los archivos que deben publicarse. Es deliberado: la carpeta de trabajo
-# contiene PDFs de papers con copyright, transcripciones completas de esos
-# papers, y material de otros proyectos. Un "ignora lo malo" se rompe en cuanto
-# aparece un archivo nuevo; este no.
+# ALLOWLIST strategy: everything is ignored by default and files are un-ignored
+# one by one. This is deliberate: the working folder holds copyrighted paper
+# PDFs, full transcriptions of those papers, and material from other projects.
+# An "ignore the bad ones" list breaks the moment a new file shows up; this
+# one does not.
 #
-# Para anadir un archivo al repo: escribe su regla !<archivo> abajo.
+# To add a file to the repo: write its !rule below.
 # ============================================================================
 
-# Ignorar todo, incluido el contenido de cualquier subcarpeta
+# Ignore everything, including the contents of any subfolder
 *
 */
 
-# --- Documentacion del repositorio ------------------------------------------
+# --- Repository documentation ------------------------------------------------
 !README.md
 !LICENSE
 !LICENSE-DATA.md
 !CITATION.cff
 !.gitignore
 
-# --- La base de datos --------------------------------------------------------
+# --- The database ------------------------------------------------------------
 !CaSrO.TDB
 !CaSrO_opt.tdb
 !CaSrO_opt_liq.tdb
 
-# --- Macros de Thermo-Calc (reproducen el trabajo) ---------------------------
+# --- Thermo-Calc macros (they reproduce the work) ----------------------------
 !validar_CaSrO.TCM
 !optimizar_CaSrO_PARROT.TCM
 !diagrama_CaSrO_opt.TCM
 !comparar_experimental.TCM
 !CaSrO.POP
 
-# --- Datos experimentales extraidos de la literatura -------------------------
-# Puntos de medicion con su cita: publicables. Los articulos de donde salen, no.
+# --- Experimental data taken from the literature -----------------------------
+# Measured points with their citation: publishable. The articles they come
+# from are not.
 !ca_o_liquidus_solubility.csv
 !halite_tielines_1100K.csv
 !datos_experimentales_parrot.md
-# Digitalizado a mano de las figuras de los papers, con procedencia en cabecera
+# Digitized by hand from the paper figures, provenance given in the header
 !experimental_CaSrO.EXP
 
-# --- Diagramas propios exportados de Console Mode (formato DATAPLOT) ---------
-# Salida de calculos hechos con esta misma base: son resultados, no datos
-# experimentales. Las dos configuraciones de la seccion 7 del README.
+# --- Own diagrams exported from Console Mode (DATAPLOT format) ---------------
+# Output of calculations made with this same database: these are results, not
+# experimental data. The two configurations of README section 7.
 !dos.exp
 !diagrama tc.exp
 
-# --- Scripts propios ---------------------------------------------------------
+# --- Own scripts -------------------------------------------------------------
 !actividad_CaO_SrO.py
 !anadir_laguna.py
 !comparar_bases.py
@@ -60,7 +61,7 @@
 !plot_optimized_CaSrO_diagram.py
 !plot_optimized_results.py
 
-# --- Figuras generadas por esos scripts --------------------------------------
+# --- Figures produced by those scripts ---------------------------------------
 !actividad_raoult_henry.png
 !comparacion_bases.png
 !dG_halita_laguna.png
@@ -70,31 +71,32 @@
 !liquidus_comparacion.png
 !resultado_optimizacion_CaSrO.png
 
-# --- Resultados tabulados ----------------------------------------------------
+# --- Tabulated results -------------------------------------------------------
 !diagrama_CaSrO.csv
 !diagrama_CaSrO_completo.csv
 
 # ============================================================================
-# NO SUBIR - anotado explicitamente aunque la regla "*" ya lo cubre, para que
-# quede constancia de por que estos archivos se quedan fuera:
+# DO NOT PUBLISH - listed explicitly even though the "*" rule already covers
+# them, so the reason stays on record:
 #
-#   *.pdf                      articulos con copyright (Elsevier, Wiley, ACerS)
-#   risold1997.md              transcripcion integra del paper de 1997
-#   Sistema Ca-O/              transcripcion integra + figuras de Deffrennes 2020
-#   sistema Sr-O/              transcripcion integra + figuras de Risold 1996
-#   jacob2000/                 transcripcion integra + figuras de Jacob 2000
-#   papers/                    idem, deffrennes2020 y zhang2016
-#   guia_escribir_tdb.*        derivado del Database Manager User Guide de TCS
-#   guia_parrot.*              idem
-#   CaSrO_opt.PAR              workspace binario de PARROT, 64 MB
-#   ca-o.exp                   export de un calculo con IONIC_LIQ (base comercial)
-#   map 1.exp                  idem, IONIC_LIQ#1/#2: es del proyecto de escorias
-#   CaSrO_exp.exp              plantilla vacia que genera COMPILE de PARROT
-#   diagrama FT.png            captura de un diagrama calculado con FactSage
-#   comparar_FactSage.py       digitaliza esa captura; inutil y dudoso sin ella
-#   comparacion_FactSage_halita.png  la superposicion reproduce la curva ajena
-#   Projects/                  proyecto industrial de escorias, no relacionado
-#   MD/  MEMORY/               notas de trabajo del agente
-#   log/  revision_*.md        bitacora de sesiones
-#   borradores/  respaldos/    versiones intermedias
+#   *.pdf                      copyrighted articles (Elsevier, Wiley, ACerS)
+#   risold1997.md              full transcription of the 1997 paper
+#   Sistema Ca-O/              full transcription + figures, Deffrennes 2020
+#   sistema Sr-O/              full transcription + figures, Risold 1996
+#   jacob2000/  jacob1998/     full transcription + figures, Jacob
+#   papers/                    same, deffrennes2020 and zhang2016
+#   guia_escribir_tdb.*        derived from the TCS Database Manager User Guide
+#   guia_parrot.*              same
+#   CaSrO_opt.PAR              binary PARROT workspace, 64 MB
+#   ca-o.exp                   export of a calculation with IONIC_LIQ
+#                              (a commercial database)
+#   map 1.exp                  same, IONIC_LIQ#1/#2: belongs to the slag project
+#   CaSrO_exp.exp              empty template generated by PARROT's COMPILE
+#   diagrama FT.png            screenshot of a diagram computed with FactSage
+#   comparar_FactSage.py       digitizes that screenshot; useless without it
+#   comparacion_FactSage_halita.png  the overlay reproduces the third-party curve
+#   Projects/                  industrial slag project, unrelated
+#   MD/  MEMORY/               agent working notes
+#   log/  revision_*.md        session logs
+#   borradores/  respaldos/    intermediate versions
 # ============================================================================

@@ -1,41 +1,41 @@
-# Licencia de la base de datos y los datos
+# License of the database and the data
 
-La base de datos termodinámica y los datos de este repositorio —`CaSrO.TDB`,
-`CaSrO_opt.tdb`, `CaSrO_opt_liq.tdb`, los archivos `.csv`, `.exp` y `.EXP`, las
-figuras y este `README.md`— se distribuyen bajo
+The thermodynamic database and the data in this repository —`CaSrO.TDB`,
+`CaSrO_opt.tdb`, `CaSrO_opt_liq.tdb`, the `.csv`, `.exp` and `.EXP` files, the figures
+and this `README.md`— are distributed under
 
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**
 
-Copyright (c) 2026 Fernando Cruz
+Copyright (c) 2026 Fernando Ivan Cruz-Cervantes
 
-Eres libre de compartir y adaptar este material, incluso comercialmente, siempre que
-des el crédito correspondiente (ver `CITATION.cff`), enlaces a la licencia e indiques
-si hiciste cambios.
+You are free to share and adapt this material, including commercially, as long as you
+give appropriate credit (see `CITATION.cff`), link to the license and indicate whether
+you made changes.
 
-Texto legal completo: <https://creativecommons.org/licenses/by/4.0/legalcode>
-Resumen: <https://creativecommons.org/licenses/by/4.0/>
+Full legal text: <https://creativecommons.org/licenses/by/4.0/legalcode>
+Summary: <https://creativecommons.org/licenses/by/4.0/>
 
-El código (`*.py`, `*.TCM`, `*.POP`) va bajo licencia MIT; ver `LICENSE`.
+The code (`*.py`, `*.TCM`, `*.POP`) is under the MIT license; see `LICENSE`.
 
 ---
 
-## Procedencia de los parámetros
+## Provenance of the parameters
 
-Esta base **ensambla** descripciones publicadas por otros autores, además de los
-parámetros derivados en este trabajo. La licencia CC BY 4.0 cubre el ensamblado, la
-conversión entre modelos y los parámetros propios, no la autoría original de los
-parámetros tomados de la literatura. Cada uno está atribuido en el
-`LIST_OF_REFERENCES` del TDB y en la sección 2 del README. Si usas esta base, cita
-también los assessments originales.
+This database **assembles** descriptions published by other authors, in addition to the
+parameters derived in this work. The CC BY 4.0 license covers the assembly, the
+conversion between models and the parameters of this work, not the original authorship
+of the parameters taken from the literature. Each one is attributed in the
+`LIST_OF_REFERENCES` of the TDB and in section 2 of the README. If you use this
+database, cite the original assessments too.
 
-## Aviso sobre las funciones unarias SGTE
+## Notice on the SGTE unary functions
 
-Las funciones de los elementos puros (`GHSERCA`, `GLIQCA`, `GBCCCA`, `GHSERSR`,
-`GLIQSR`, `GBCCSR`, `GHSEROO`, `GLIQOO`) son datos unarios de SGTE, publicados en
+The pure element functions (`GHSERCA`, `GLIQCA`, `GBCCCA`, `GHSERSR`, `GLIQSR`,
+`GBCCSR`, `GHSEROO`, `GLIQOO`) are SGTE unary data, published in
 
 > A.T. Dinsdale, "SGTE data for pure elements", *Calphad* **15**(4) (1991) 317–425.
 
-No son obra del autor de este repositorio y **no están cubiertas por la licencia
-CC BY 4.0 de arriba**. Su uso y redistribución se rigen por las condiciones de SGTE
-(<https://www.sgte.net>). Se incluyen aquí porque una base CALPHAD no es utilizable
-sin ellas, con atribución explícita a la fuente.
+They are not the work of the author of this repository and are **not covered by the
+CC BY 4.0 license above**. Their use and redistribution are governed by the SGTE
+conditions (<https://www.sgte.net>). They are included here because a CALPHAD database
+is unusable without them, with explicit attribution to the source.

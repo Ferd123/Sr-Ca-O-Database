@@ -1,25 +1,25 @@
 cff-version: 1.2.0
-title: "Base de datos termodinámica Ca-Sr-O para Thermo-Calc"
-message: "Si usas esta base de datos, por favor cítala como se indica aquí, y cita también los assessments originales listados en el README."
+title: "Ca-Sr-O thermodynamic database for Thermo-Calc"
+message: "If you use this database, please cite it as indicated here, and cite the original assessments listed in the README as well."
 type: dataset
 authors:
-  - family-names: "Cruz"
-    given-names: "Fernando"
+  - family-names: "Cruz-Cervantes"
+    given-names: "Fernando Ivan"
     affiliation: "Instituto Politécnico Nacional"
     # orcid: "https://orcid.org/0000-0000-0000-0000"
 version: "1.0.0"
 date-released: "2026-08-13"
 license: CC-BY-4.0
 abstract: >-
-  Descripción CALPHAD del sistema Ca-Sr-O para Thermo-Calc, con la fase líquida
-  en modelo de asociados (Ca, CaO, O, Sr, SrO). Ensambla cinco descripciones
-  publicadas que empleaban modelos mutuamente incompatibles: el líquido iónico
-  de dos subredes de Sr-O se convierte analíticamente a asociados, el líquido
-  CaO de dos estados se reajusta a forma SGTE clásica imponiendo el punto y la
-  entalpía de fusión, y la solución sólida halita (Ca,Sr)O se valida por dos
-  rutas independientes. Las fases estequiométricas CaO y CaO2 conservan las
-  funciones de Einstein de tercera generación. Incluye los macros de Console
-  Mode, el archivo POP de PARROT y los datos experimentales usados.
+  CALPHAD description of the Ca-Sr-O system for Thermo-Calc, with the liquid
+  phase in the associate model (Ca, CaO, O, Sr, SrO). It assembles five
+  published descriptions that used mutually incompatible models: the
+  two-sublattice Sr-O ionic liquid is converted analytically to associates, the
+  two-state CaO liquid is refitted to classical SGTE form imposing the melting
+  point and the enthalpy of fusion, and the halite (Ca,Sr)O solid solution is
+  validated by two independent routes. The stoichiometric phases CaO and CaO2
+  keep the third generation Einstein functions. It includes the Console Mode
+  macros, the PARROT POP file and the experimental data used.
 keywords:
   - CALPHAD
   - thermodynamic database
