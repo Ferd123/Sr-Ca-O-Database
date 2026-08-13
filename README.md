@@ -272,8 +272,8 @@ data of [4] without having been fitted to them.
 
 ### Syntax: rules checked against the documentation
 
-The rules were taken from the **Database Manager User Guide** (Thermo-Calc
-Documentation Set 2025a, `Manuals/All Thermo-Calc Documentation/`) and cross-checked
+The rules were taken from the **Database Manager's Guide** (Thermo-Calc
+Documentation Set 2025a, `Documentation/` or `Thermo-Calc_Documentation-Set.pdf`) and cross-checked
 against `PGEO.TDB`, a real database shipped with the software.
 
 | Rule | Source | Status |
