@@ -280,21 +280,28 @@ errores.**
 | Estados de fase válidos (`sus`/`ent`/`fix`/`dor`) | correctos |
 | Cada `=fix 0` libera una condición con `s-c t=none` | 2 de 2 |
 
-### Lo que sigue sin estar validado
+### Estado en Thermo-Calc
 
-**El archivo no se ha cargado en Thermo-Calc.** La sintaxis está verificada contra la
-documentación y contra bases reales, y la termodinámica está verificada
-numéricamente, pero eso no sustituye a que el parser lo acepte. No se pudo ejecutar TC
-desde el entorno de trabajo: `DatabaseChecker.exe` sólo tiene interfaz gráfica (no
-acepta argumentos de línea de comandos) y TC-Python no está instalado.
+**La base carga y calcula en Thermo-Calc 2025a.** El parser la acepta y los equilibrios
+de la tabla de arriba se reproducen desde el propio software, no sólo evaluando las
+funciones en Python.
 
-Para cerrarlo, cualquiera de las dos:
+Para reproducirlo: fijar el directorio de trabajo en esta carpeta y, en Console Mode,
+ejecutar `macro_file_open validar_CaSrO.TCM`. Los 7 bloques van separados por `@&`
+para poder correrlos de uno en uno.
 
-- Abrir `DatabaseChecker.exe` desde `C:\Program Files\Thermo-Calc\2025a\` y apuntarlo
-  a esta carpeta.
-- En Console Mode: fijar el directorio de trabajo en esta carpeta y ejecutar
-  `macro_file_open validar_CaSrO.TCM`. Si algo falla de sintaxis, revienta en el
-  bloque 1 e indica la línea.
+**Se corre en dos configuraciones, con el mismo archivo.** No hay dos bases: la
+diferencia está en qué fases se dejan activas con `change-status`.
+
+| Configuración | Fases | Para qué |
+|---|---|---|
+| Completa | las 7 | Diagramas Ca-O y estabilidad de los peróxidos frente a pO₂. La fase GAS se suspende para el liquidus Ca-CaO a 1 bar (ver sección 8). |
+| Pseudobinario CaO-SrO | sólo `LIQUID` y `HALITE` | `change-status phase BCC_A2 FCC_A1 CAO2 SRO2 GAS = suspended`, corte a `X(O) = 0.5`. Es la de `diagrama_CaSrO_opt.TCM`. |
+
+Los peróxidos se suspenden en el corte pseudobinario porque a `X(O) = 0.5` no
+participan y sólo estorban a la convergencia. La laguna de la halita pide además
+arrancar dentro de ella (1100 K, `X(SR) = 0.2`) para que la minimización global genere
+los dos conjuntos de composición.
 
 > **Ojo con el espacio en el nombre de la carpeta.** `SWITCH_DATABASE` de Console Mode
 > no acepta rutas entre comillas, así que el macro llama al archivo por su nombre a
