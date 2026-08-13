@@ -5,8 +5,8 @@ $ Thermodynamic database for Thermo-Calc, condensed phases.
 $ Liquid phase described with the ASSOCIATE MODEL (species Ca, Sr, O,
 $ CaO, SrO).
 $
-$ Assembled 2026-08-03.  Syntax checked against the Database Manager
-$ User Guide (Thermo-Calc Documentation Set, 2025a) and against PGEO.TDB.
+$ Assembled 2026-08-03.  Syntax checked against the Database Manager's
+$ Guide (Thermo-Calc Documentation Set, 2025a) and against PGEO.TDB.
 $
 $ SOURCES
 $ [1] Deffrennes, Jakse, Alvares, Nuta, Pasturel, Khvan, Pisch,
@@ -36,7 +36,7 @@ $    3rd generation Einstein functions of [1]: being stoichiometric they
 $    conflict with nothing and they fit Cp and S better than a
 $    polynomial. They are written with the built-in Thermo-Calc function
 $    GEIN(theta) = 1.5*R*theta + 3*R*T*LN(1-EXP(-theta/T)), documented in
-$    the Database Manager User Guide.
+$    the Database Manager's Guide.
 $
 $ 2. CaO LIQUID. [1] describes CaO(liq) with the two-state model, which
 $    in Thermo-Calc is a property of the WHOLE PHASE and therefore cannot

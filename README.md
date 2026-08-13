@@ -185,7 +185,7 @@ The unaries `GHSERCA`, `GLIQCA`, `GBCCCA`, `GHSERSR`, `GLIQSR`, `GBCCSR`, `GHSER
 and `GLIQOO` are copied verbatim from SGTE PURE5.
 
 The Einstein terms are written with the **`GEIN`** function built into Thermo-Calc,
-documented in the Database Manager User Guide:
+documented in the **Database Manager's Guide**:
 
 ```
 GEIN(theta) = 1.5*R*theta + 3*R*T*LN(1-EXP(-theta/T))
