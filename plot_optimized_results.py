@@ -43,22 +43,58 @@ ax1.grid(True, linestyle='--', alpha=0.6)
 # ==============================================================================
 # FIGURE 2: Solubility of CaO in Liquid Ca (Ca-O Binary)
 # ==============================================================================
-# Experimental data of Fischbach (1985) & Zaitsev (1998)
-T_exp_sol = np.array([1165, 1273, 1373, 1473, 1573, 1673, 1705])
-x_O_fischbach = np.array([0.0178, 0.0210, 0.0248, 0.0295, 0.0352, 0.0420, 0.0445]) # at.% O / 100
+# Experimental data of Fischbach (1985)
+T_exp_dta = np.array([1280, 1283, 1307, 1372, 1376, 1575])
+x_O_exp_dta = np.array([2.50, 2.60, 2.90, 3.15, 3.25, 4.20]) # at.% O
+
+T_exp_chem = np.array([1232, 1283, 1472, 1470, 1710, 1710])
+x_O_exp_chem = np.array([2.60, 2.80, 3.30, 3.90, 5.80, 6.20]) # at.% O
+
+from scipy.optimize import brentq
+R = 8.31451
+
+def gein(theta, T):
+    return 1.5 * R * theta + 3 * R * T * np.log(1 - np.exp(-theta / T))
+
+def G_CaO_cr(T):
+    T = np.asarray(T, float)
+    baja = (-652134.4 + 1.142993 * gein(369.447, T) + 0.62542 * gein(601.229, T)
+            + 0.218718 * gein(188.291, T) - 0.00182458 * T ** 2
+            - 3.1187482541e-02 * np.exp(0.00304142 * T))
+    alta = (-726686.2348 + 556.326025 * T - 79.464890 * T * np.log(T)
+            - 2.269506e-04 * T ** 2)
+    return np.where(T <= 3222.0, baja, alta)
+
+def G_CaO_liq(T):
+    return (-656748.5662 + 572.751716 * T - 84.370735 * T * np.log(T)
+            + 2.374069e-04 * T ** 2)
+
+def L_liq(T):
+    return -9625.0 + 12.30 * T
+
+def solve_solubility(T):
+    g_cr = G_CaO_cr(T)
+    g_liq = G_CaO_liq(T)
+    L = L_liq(T)
+    
+    def eq(y):
+        return g_liq + R * T * np.log(y) + (1 - y)**2 * L - g_cr
+        
+    return brentq(eq, 1e-12, 0.99)
 
 T_model = np.linspace(1093.6, 1800, 150)
-# Optimized CALPHAD solubility model: ln(x_O) = -9625/R/T + ...
-x_O_model = 0.0178 * np.exp(12.3 * (1 - 1093.6/T_model) - 9625/8.314 * (1/T_model - 1/1093.6))
+y_model = np.array([solve_solubility(t) for t in T_model])
+x_O_model = y_model / (1.0 + y_model)
 
 ax2.plot(x_O_model * 100, T_model, 'r-', linewidth=2.5, label='Optimized CALPHAD (Ca-CaO liquidus)')
-ax2.scatter(x_O_fischbach * 100, T_exp_sol, color='blue', s=60, zorder=5, marker='o', label='Fischbach (1985) exp.')
+ax2.scatter(x_O_exp_dta, T_exp_dta, color='blue', s=60, zorder=5, marker='o', label='Fischbach (1985) DTA')
+ax2.scatter(x_O_exp_chem, T_exp_chem, color='darkturquoise', s=60, zorder=5, marker='s', label='Fischbach (1985) Chem. Anal.')
 ax2.scatter(1.78, 1093.6, color='black', s=80, zorder=6, marker='*', label='bcc-Ca + CaO eutectic (1093.6 K)')
 
 ax2.set_title('Oxygen Solubility in Liquid Ca', fontsize=13, fontweight='bold', pad=12)
 ax2.set_xlabel(r'Oxygen Concentration (at.% O)', fontsize=11)
 ax2.set_ylabel(r'Temperature (K)', fontsize=11)
-ax2.set_xlim(0, 5.0)
+ax2.set_xlim(0, 7.0)
 ax2.set_ylim(1000, 1800)
 ax2.legend(frameon=True, facecolor='white', framealpha=0.9, fontsize=9)
 ax2.grid(True, linestyle='--', alpha=0.6)
