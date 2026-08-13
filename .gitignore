@@ -38,11 +38,14 @@
 !ca_o_liquidus_solubility.csv
 !halite_tielines_1100K.csv
 !datos_experimentales_parrot.md
-!CaSrO_exp.exp
+# Digitalizado a mano de las figuras de los papers, con procedencia en cabecera
 !experimental_CaSrO.EXP
-!ca-o.exp
-# Diagrama pseudobinario propio exportado de Thermo-Calc; lo usan las graficas
+
+# --- Diagramas propios exportados de Console Mode (formato DATAPLOT) ---------
+# Salida de calculos hechos con esta misma base: son resultados, no datos
+# experimentales. Las dos configuraciones de la seccion 7 del README.
 !dos.exp
+!diagrama tc.exp
 
 # --- Scripts propios ---------------------------------------------------------
 !actividad_CaO_SrO.py
@@ -84,6 +87,9 @@
 #   guia_escribir_tdb.*        derivado del Database Manager User Guide de TCS
 #   guia_parrot.*              idem
 #   CaSrO_opt.PAR              workspace binario de PARROT, 64 MB
+#   ca-o.exp                   export de un calculo con IONIC_LIQ (base comercial)
+#   map 1.exp                  idem, IONIC_LIQ#1/#2: es del proyecto de escorias
+#   CaSrO_exp.exp              plantilla vacia que genera COMPILE de PARROT
 #   diagrama FT.png            captura de un diagrama calculado con FactSage
 #   comparar_FactSage.py       digitaliza esa captura; inutil y dudoso sin ella
 #   comparacion_FactSage_halita.png  la superposicion reproduce la curva ajena

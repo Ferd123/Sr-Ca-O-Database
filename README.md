@@ -18,8 +18,16 @@ Licencia: CC BY 4.0 (base de datos y datos) / MIT (código). Ver sección 10.
 | `CaSrO_opt.tdb`, `CaSrO_opt_liq.tdb` | Variantes con el líquido reoptimizado. |
 | `validar_CaSrO.TCM` | Macro de Console Mode, 7 bloques (ver abajo). |
 | `CaSrO.POP`, `optimizar_CaSrO_PARROT.TCM` | Optimización con PARROT. |
-| `*.csv`, `*.exp`, `*.EXP` | Datos experimentales de la literatura, con su cita. |
+| `experimental_CaSrO.EXP` | Datos experimentales digitalizados de la literatura, con la procedencia de cada dataset en la cabecera. |
+| `*.csv` | Puntos experimentales tabulados y los diagramas calculados en CSV. |
+| `dos.exp`, `diagrama tc.exp` | Diagramas **calculados**, exportados de Console Mode en formato DATAPLOT. Son resultados, no datos experimentales. |
 | `*.py` | Scripts de evaluación y de las figuras. |
+
+Los dos `.exp` calculados corresponden a las dos configuraciones de la sección 7:
+`diagrama tc.exp` sale de la corrida con las 7 fases activas (aparecen `LIQUID`,
+`HALITE#1/#2`, `FCC_A1`, `BCC_A2`, `SRO2`), y `dos.exp` de la del corte pseudobinario
+con todo suspendido menos líquido y halita (sólo `LIQUID` y `HALITE#1/#2`). Los
+scripts de gráficas leen `dos.exp`.
 
 Los artículos de los que salen los parámetros **no** están en el repositorio: tienen
 copyright. Las citas completas están en la sección 2 y en el `LIST_OF_REFERENCES` del

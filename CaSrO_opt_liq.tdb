@@ -212,6 +212,7 @@ $ ningun parametro que la cite directamente, no figura en la lista.
  REF7        'Estimado en este trabajo por analogia con Ca-O'
  REF9        'Estimado en este trabajo por analogia con BaO-CaO y BaO-SrO
               de Zhang, Mao, Taskinen, Calphad 54 (2016) 107-116.'
- REF8        'Reoptimizado en este trabajo con PARROT sobre 15 puntos de
-              la laguna de miscibilidad. Partida: Risold 1997.'
+ REF8        'Reoptimizado en este trabajo con PARROT sobre los 15 puntos
+              de la laguna de miscibilidad medidos por Jacob y Waseda,
+              J Am Ceram Soc 81(4) (1998) 1065-1068. Partida: Risold 1997.'
   !
