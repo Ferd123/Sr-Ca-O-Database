@@ -1,0 +1,217 @@
+$ CaSrO_opt_liq.tdb   -   VARIANTE, 2026-08-05
+$
+$ Identica a CaSrO_opt.tdb salvo en UN parametro:
+$    L(LIQUID,CAO,SRO;0)   +25000  ->  +2000  J/mol
+$
+$ MOTIVO. El valor de 25000 procede de Risold et al. 1997 (50000 en el
+$ modelo ionico, la mitad al pasar a asociados). Los propios autores
+$ declaran desconocido el liquido CaO-SrO; su valor es un parametro de
+$ ajuste de un cuaternario, no una medida. Dos razones para rebajarlo:
+$
+$  1. FISICA. El exceso positivo de la halita procede de la diferencia de
+$     radio entre Ca2+ (100 pm) y Sr2+ (118 pm) forzados a posiciones
+$     equivalentes de la red. Al fundir desaparece la red y con ella ese
+$     coste, luego se espera L(liquido) < L(solido). La base tenia 25000
+$     frente a 12900 del solido a 3000 K: la relacion invertida.
+$
+$  2. ANALOGIA. Zhang, Mao y Taskinen, Calphad 54 (2016) 107-116,
+$     evaluaron con datos los sistemas analogos y obtuvieron, a 2500 K:
+$        BaO-CaO   halita +57200   liquido  +8825   (razon 6.5)
+$        BaO-SrO   halita +14717   liquido  ideal
+$     Aplicando la razon de BaO-CaO al exceso de nuestra halita sale
+$     L(liquido) ~ 2000 J/mol, que es el valor adoptado.
+$
+$ COTA DURA. Con L = 25000 el liquido tendria laguna de miscibilidad con
+$ Tc = L/2R = 1503 K, por encima de los 1178 K de la halita, es decir el
+$ fundido se desmezclaria antes que el cristal. Para evitar esa
+$ contradiccion hace falta L < 2R x 1178 = 19590 J/mol.
+$
+$ ADVERTENCIA. Este valor es una ESTIMACION POR ANALOGIA, no una medida.
+$ No existe determinacion experimental del liquido CaO-SrO. Para el valor
+$ trazable a publicacion, usar CaSrO_opt.tdb.
+$
+$ Lo que NO cambia respecto de CaSrO_opt.tdb: la laguna de la halita y sus
+$ parametros optimizados con PARROT, que son la parte validada.
+$
+$ Output from Gibbs Energy System v6
+
+ ELEMENT /-   ELECTRON_GAS              0.0000E+00   0.0000E+00   0.0000E+00 !
+ ELEMENT VA   VACUUM                    0.0000E+00   0.0000E+00   0.0000E+00 !
+ ELEMENT CA   FCC_A1                    4.0078E+01   6.1965E+03   4.1589E+01 !
+ ELEMENT O    1/2_MOLE_O2(GAS)          1.5999E+01   4.3410E+03   1.0252E+02 !
+ ELEMENT SR   FCC_A1                    8.7620E+01   0.0000E+00   0.0000E+00 !
+
+ SPECIES CAO                            CA1O1 !
+ SPECIES O2                             O2 !
+ SPECIES SRO                            SR1O1 !
+
+ DEFINE_SYSTEM_DEFAULT ELEMENT 2 !
+
+ DEFAULT_COMMAND  DEFINE_SYSTEM_ELEMENT VA /- !
+
+ TYPE_DEF % SEQ * !
+
+ FUNCTION GBCCCA               298.15 -7020.852+142.970155*T
+     -28.2541*T*LN(T)+0.0072326*T**2-4.500217E-6*T**3
+     +60578*T**(-1);                                             716 Y
+     +1640.475+1.999694*T-6.276*T*LN(T)-0.0161921*T**2
+     -523000*T**(-1);                                            1115 Y
+     -142331.096+1023.549046*T-143.8726979*T*LN(T)+0.032543127*T**2
+     -1.704079E-6*T**3+2.5353771E7*T**(-1);                      3000 Y
+     +321.63+189.433057*T-35*T*LN(T);                            3001 N !
+ FUNCTION GBCCSR               298.15 -6779.234+116.583654*T
+     -25.6708365*T*LN(T)-0.003126762*T**2+2.2965E-7*T**3
+     +27649*T**(-1);                                             820 Y
+     -6970.594+122.067301*T-26.57*T*LN(T)-0.0019493*T**2-1.7895E-8*T**3
+     +16495*T**(-1);                                             1050 Y
+     +8168.357+0.423037*T-9.7788593*T*LN(T)-0.009539908*T**2
+     +5.20221E-7*T**3-2414794*T**(-1);                           3000 N !
+ FUNCTION GCAO2CR              298.15 -676359.7+GCO2E1#+GCO2E2#
+     +GCO2E3#;                                                   6000 N !
+ FUNCTION GCAOANH              298.15 
+     -0.031187482541*EXP(0.00304142*T);                          6000 N !
+ FUNCTION GCAOCR               298.15 -652134.4+GCAOE1#+GCAOE2#+GCAOE3#
+     -0.00182458*T**2+GCAOANH#;                                  3222 Y
+     -726686.2348+556.326025*T-79.46489*T*LN(T)-2.269506E-4*T**2; 6000 N !
+ FUNCTION GCAOE1               298.15 +1.142993*GEIN(369.447);   6000 N !
+ FUNCTION GCAOE2               298.15 +0.62542*GEIN(601.229);    6000 N !
+ FUNCTION GCAOE3               298.15 +0.218718*GEIN(188.291);   6000 N !
+ FUNCTION GCAOLIQ              298.15 -656748.5662+572.751716*T
+     -84.370735*T*LN(T)+2.374069E-4*T**2;                        6000 N !
+ FUNCTION GCO2E1               298.15 +2.04814*GEIN(398.195);    6000 N !
+ FUNCTION GCO2E2               298.15 +0.45973*GEIN(184.418);    6000 N !
+ FUNCTION GCO2E3               298.15 +0.56518*GEIN(954.326);    6000 N !
+ FUNCTION GHSERCA              298.15 -4955.062+72.794266*T
+     -16.3138*T*LN(T)-0.01110455*T**2-133574*T**(-1);            1115 Y
+     -107304.428+799.982066*T-114.2922467*T*LN(T)+0.023733814*T**2
+     -1.2438E-6*T**3+1.824554E7*T**(-1);                         3000 Y
+     -3703.12+192.63995*T-35*T*LN(T);                            3001 N !
+ FUNCTION GHSEROO              298.15 -3480.87-25.503038*T-11.1355*T*LN(T)
+     -0.005098875*T**2+6.61845833E-7*T**3-38365*T**(-1);         1000 Y
+     -6568.763+12.659879*T-16.8138*T*LN(T)-5.957975E-4*T**2+6.781E-9*T**3
+     +262905*T**(-1);                                            3300 Y
+     -13986.728+31.259624*T-18.9536*T*LN(T)-4.25243E-4*T**2+1.0721E-8*T**3
+     +4383200*T**(-1);                                           6000 N !
+ FUNCTION GHSERSR              298.15 -7532.367+107.183879*T
+     -23.905*T*LN(T)-0.00461225*T**2-1.67477E-7*T**3-2055*T**(-1); 820 Y
+     -13380.102+153.196104*T-30.0905432*T*LN(T)-0.003251266*T**2
+     +1.84189E-7*T**3+850134*T**(-1);                            3000 N !
+ FUNCTION GLIQCA               298.15 +5844.846+62.4838*T-16.3138*T*LN(T)
+     -0.01110455*T**2-133574*T**(-1);                            500 Y
+     +7838.856+18.2979*T-8.9874787*T*LN(T)-0.02266537*T**2
+     +3.338303E-6*T**3-230193*T**(-1);                           1115 Y
+     -2654.938+188.9223*T-35*T*LN(T);                            3001 N !
+ FUNCTION GLIQOO               298.15 +GHSEROO#-2648.9+31.44*T;  6000 N !
+ FUNCTION GLIQSR               298.15 +2194.997-10.118994*T
+     -5.0668978*T*LN(T)-0.031840595*T**2+4.981237E-6*T**3
+     -265559*T**(-1); 1050 Y -10855.29+213.406219*T-39.463*T*LN(T); 3000 N !
+ FUNCTION GSRO2CR              298.15 +GSROCR#+GHSEROO#-43740+70*T; 3000 N !
+ FUNCTION GSROCR               298.15 -607870+268.9*T-47.56*T*LN(T)
+     -0.00307*T**2+190000*T**(-1);                               3000 N !
+ FUNCTION GSROLIQ              298.15 -566346+449*T-73.1*T*LN(T); 6000 N !
+
+
+ PHASE GAS:G    %         1 1  !
+ CONST GAS:G              : O2 : !
+
+
+ PHASE LIQUID:L %         1 1  !
+ CONST LIQUID:L           : CA CAO O SR SRO : !
+
+
+ PHASE BCC_A2   %         2 1 3  !
+ CONST BCC_A2             : CA SR : VA : !
+
+
+ PHASE CAO2     %         2 1 2  !
+ CONST CAO2               : CA : O : !
+
+
+ PHASE FCC_A1   %         2 1 1  !
+ CONST FCC_A1             : CA SR : VA : !
+
+
+ PHASE HALITE   %         2 1 1  !
+ CONST HALITE             : CA SR : O : !
+
+
+ PHASE SRO2     %         2 1 2  !
+ CONST SRO2               : SR : O : !
+
+
+
+$ ==== [Ca] ====
+ PARAM G(BCC_A2,CA:VA;0)       298.15 +GBCCCA#;                  3001 N REF6 !
+
+ PARAM G(FCC_A1,CA:VA;0)       298.15 +GHSERCA#;                 3001 N REF6 !
+
+ PARAM G(LIQUID,CA;0)          298.15 +GLIQCA#;                  3001 N REF6 !
+
+
+$ ==== [O] ====
+ PARAM G(GAS,O2;0)             298.15 +2*GHSEROO#
+     +R#*T*LN(1.0E-5*P);                                         6000 N REF6 !
+
+ PARAM G(LIQUID,O;0)           298.15 +GLIQOO#;                  6000 N REF6 !
+
+
+$ ==== [Sr] ====
+ PARAM G(BCC_A2,SR:VA;0)       298.15 +GBCCSR#;                  3000 N REF6 !
+
+ PARAM G(FCC_A1,SR:VA;0)       298.15 +GHSERSR#;                 3000 N REF6 !
+
+ PARAM G(LIQUID,SR;0)          298.15 +GLIQSR#;                  3000 N REF6 !
+
+
+$ ==== [Ca, O] ====
+ PARAM G(CAO2,CA:O;0)          298.15 +GCAO2CR#;                 6000 N REF1 !
+
+ PARAM G(HALITE,CA:O;0)        298.15 +GCAOCR#;                  6000 N REF1 !
+
+ PARAM G(LIQUID,CAO;0)         298.15 +GCAOLIQ#;                 6000 N REF1 !
+ PARAM L(LIQUID,CAO,O;0)       298.15 +30*T;                     6000 N REF1 !
+ PARAM L(LIQUID,CA,CAO;0)      298.15 -9625+12.3*T;              6000 N REF1 !
+
+
+$ ==== [Ca, Sr] ====
+ PARAM L(BCC_A2,CA,SR:VA;0)    298.15 +3770.03+0.01*T;           3000 N REF5 !
+
+ PARAM L(FCC_A1,CA,SR:VA;0)    298.15 +3770.03+0.11*T;           3000 N REF5 !
+
+ PARAM L(LIQUID,CA,SR;0)       298.15 +1682+0.59*T;              3000 N REF5 !
+ PARAM L(LIQUID,CA,SR;1)       298.15 +521.05+0.052*T;           3000 N REF5 !
+ PARAM L(LIQUID,CA,SR;2)       298.15 -900;                      3000 N REF5 !
+
+
+$ ==== [O, Sr] ====
+ PARAM G(HALITE,SR:O;0)        298.15 +GSROCR#;                  3000 N REF2 !
+
+ PARAM G(LIQUID,SRO;0)         298.15 +GSROLIQ#;                 6000 N REF2 !
+ PARAM L(LIQUID,O,SRO;0)       298.15 +30*T;                     6000 N REF7 !
+ PARAM L(LIQUID,SR,SRO;0)      298.15 +0;                        6000 N REF2 !
+
+ PARAM G(SRO2,SR:O;0)          298.15 +GSRO2CR#;                 3000 N REF2 !
+
+
+$ ==== [Ca, O, Sr] ====
+ PARAM L(HALITE,CA,SR:O;0)     298.15 +23756-3.6130*T;           3000 N REF8 !
+ PARAM L(HALITE,CA,SR:O;1)     298.15 +916.24;                   3000 N REF8 !
+
+ PARAM L(LIQUID,CAO,SRO;0)     298.15 +2000;                     6000 N REF9 !
+
+$ Risold, Hallstedt, Gauckler, J Am Ceram Soc 80(3) (1997) 537-548 es la
+$ fuente de los valores de partida de la halita, reoptimizados aqui (REF8),
+$ y del valor 25000 del liquido que esta variante sustituye. Al no quedar
+$ ningun parametro que la cite directamente, no figura en la lista.
+ LIST_OF_REFERENCES
+ NUMBER      SOURCE
+ REF1        'Deffrennes et al., Calphad 69 (2020) 101764'
+ REF2        'Risold, Hallstedt, Gauckler, Calphad 20(3) (1996) 353-361'
+ REF5        'Aljarrah, Medraj, Calphad 32 (2008) 240-251'
+ REF6        'Dinsdale, Calphad 15(4) (1991) 317-425 (SGTE PURE5)'
+ REF7        'Estimado en este trabajo por analogia con Ca-O'
+ REF9        'Estimado en este trabajo por analogia con BaO-CaO y BaO-SrO
+              de Zhang, Mao, Taskinen, Calphad 54 (2016) 107-116.'
+ REF8        'Reoptimizado en este trabajo con PARROT sobre 15 puntos de
+              la laguna de miscibilidad. Partida: Risold 1997.'
+  !

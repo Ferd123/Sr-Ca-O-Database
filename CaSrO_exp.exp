@@ -1,0 +1,17 @@
+$ This file should be checked before use as experimental data file.
+$ Each dataset must be started with DATASET <number> <text>
+$ follwed by a BLOCK X=C2; Y=C3; GOC=C4,MAWSi
+$ After all lines with coordinates a line BLOCKEND
+$ must follow.  More changes can be done, for example adding authors
+$ But that is up to the user.
+$ You may also modify the PROLOG below or add more.
+ PROLOG 1
+ XSCALE 0.0 1.0
+ YSCALE 0.0 1.0
+ XTYPE LINEAR
+ YTYPE LINEAR
+ XLENGTH 11.5 
+ YLENGTH 11.5
+ TITLE 
+ XTEXT  X-AXIS
+ YTEXT Y-AXIS

@@ -1,0 +1,94 @@
+# ============================================================================
+# .gitignore - repositorio Ca-Sr-O
+# ----------------------------------------------------------------------------
+# Estrategia de LISTA BLANCA: se ignora todo por defecto y se van des-ignorando
+# solo los archivos que deben publicarse. Es deliberado: la carpeta de trabajo
+# contiene PDFs de papers con copyright, transcripciones completas de esos
+# papers, y material de otros proyectos. Un "ignora lo malo" se rompe en cuanto
+# aparece un archivo nuevo; este no.
+#
+# Para anadir un archivo al repo: escribe su regla !<archivo> abajo.
+# ============================================================================
+
+# Ignorar todo, incluido el contenido de cualquier subcarpeta
+*
+*/
+
+# --- Documentacion del repositorio ------------------------------------------
+!README.md
+!LICENSE
+!LICENSE-DATA.md
+!CITATION.cff
+!.gitignore
+
+# --- La base de datos --------------------------------------------------------
+!CaSrO.TDB
+!CaSrO_opt.tdb
+!CaSrO_opt_liq.tdb
+
+# --- Macros de Thermo-Calc (reproducen el trabajo) ---------------------------
+!validar_CaSrO.TCM
+!optimizar_CaSrO_PARROT.TCM
+!diagrama_CaSrO_opt.TCM
+!comparar_experimental.TCM
+!CaSrO.POP
+
+# --- Datos experimentales extraidos de la literatura -------------------------
+# Puntos de medicion con su cita: publicables. Los articulos de donde salen, no.
+!ca_o_liquidus_solubility.csv
+!halite_tielines_1100K.csv
+!datos_experimentales_parrot.md
+!CaSrO_exp.exp
+!experimental_CaSrO.EXP
+!ca-o.exp
+# Diagrama pseudobinario propio exportado de Thermo-Calc; lo usan las graficas
+!dos.exp
+
+# --- Scripts propios ---------------------------------------------------------
+!actividad_CaO_SrO.py
+!anadir_laguna.py
+!comparar_bases.py
+!liquidus_CaO_SrO.py
+!exportar_diagrama.py
+!plot_beautiful_CaSrO.py
+!plot_beautiful_CaSrO_CaO.py
+!plot_dG_halita.py
+!plot_full_CaSrO_diagram.py
+!plot_optimized_CaSrO_diagram.py
+!plot_optimized_results.py
+
+# --- Figuras generadas por esos scripts --------------------------------------
+!actividad_raoult_henry.png
+!comparacion_bases.png
+!dG_halita_laguna.png
+!diagrama_CaSrO_completo.png
+!diagrama_CaSrO_optimizado.png
+!liquidus_analogia.png
+!liquidus_comparacion.png
+!resultado_optimizacion_CaSrO.png
+
+# --- Resultados tabulados ----------------------------------------------------
+!diagrama_CaSrO.csv
+!diagrama_CaSrO_completo.csv
+
+# ============================================================================
+# NO SUBIR - anotado explicitamente aunque la regla "*" ya lo cubre, para que
+# quede constancia de por que estos archivos se quedan fuera:
+#
+#   *.pdf                      articulos con copyright (Elsevier, Wiley, ACerS)
+#   risold1997.md              transcripcion integra del paper de 1997
+#   Sistema Ca-O/              transcripcion integra + figuras de Deffrennes 2020
+#   sistema Sr-O/              transcripcion integra + figuras de Risold 1996
+#   jacob2000/                 transcripcion integra + figuras de Jacob 2000
+#   papers/                    idem, deffrennes2020 y zhang2016
+#   guia_escribir_tdb.*        derivado del Database Manager User Guide de TCS
+#   guia_parrot.*              idem
+#   CaSrO_opt.PAR              workspace binario de PARROT, 64 MB
+#   diagrama FT.png            captura de un diagrama calculado con FactSage
+#   comparar_FactSage.py       digitaliza esa captura; inutil y dudoso sin ella
+#   comparacion_FactSage_halita.png  la superposicion reproduce la curva ajena
+#   Projects/                  proyecto industrial de escorias, no relacionado
+#   MD/  MEMORY/               notas de trabajo del agente
+#   log/  revision_*.md        bitacora de sesiones
+#   borradores/  respaldos/    versiones intermedias
+# ============================================================================

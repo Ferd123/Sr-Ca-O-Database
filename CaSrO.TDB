@@ -1,0 +1,367 @@
+$ ==========================================================================
+$ CaSrO.TDB  -  Sistema Ca-Sr-O
+$ --------------------------------------------------------------------------
+$ Base de datos termodinamica para Thermo-Calc, fases condensadas.
+$ Fase liquida con MODELO DE ASOCIADOS (especies Ca, Sr, O, CaO, SrO).
+$
+$ Ensamblada 2026-08-03.  Sintaxis verificada contra el Database Manager
+$ User Guide (Thermo-Calc Documentation Set, 2025a) y contra PGEO.TDB.
+$
+$ FUENTES
+$ [1] Deffrennes, Jakse, Alvares, Nuta, Pasturel, Khvan, Pisch,
+$     "Thermodynamic modelling of the Ca-O system including 3rd
+$     generation description of CaO and CaO2", Calphad 69 (2020) 101764.
+$ [2] Risold, Hallstedt, Gauckler, "The strontium-oxygen system",
+$     Calphad 20(3) (1996) 353-361.
+$ [3] Risold, Hallstedt, Gauckler, "Thermodynamic modeling and calculation
+$     of phase equilibria in the Sr-Ca-Cu-O system at ambient pressure",
+$     J. Am. Ceram. Soc. 80(3) (1997) 537-548.  [Tabla VI]
+$ [4] Jacob, Jayadevan, "Tie-lines and mixing properties of solid
+$     solutions in the system CaO-SrO-PbO-O at 1100 K", J. Phase
+$     Equilibria 21(4) (2000) 350-356.  [datos originales: Jacob y
+$     Waseda, J. Am. Ceram. Soc. 81 (1998) 1065]
+$ [5] Aljarrah, Medraj, "Thermodynamic modelling of the Mg-Ca, Mg-Sr,
+$     Ca-Sr and Mg-Ca-Sr systems using the modified quasichemical
+$     model", Calphad 32 (2008) 240-251.
+$ [6] Dinsdale, "SGTE data for pure elements", Calphad 15(4) (1991) 317.
+$     Unarias copiadas literalmente de SGTE PURE5 (Thermo-Calc 2025a).
+$
+$ --------------------------------------------------------------------------
+$ NOTAS DE MODELADO  (leer antes de usar)
+$
+$ 1. GENERACION. La base es 2a generacion en lo que respecta a la FASE
+$    LIQUIDA. Las fases estequiometricas CaO y CaO2 conservan las
+$    funciones de Einstein de 3a generacion de [1]: al ser
+$    estequiometricas no entran en conflicto con nada y ajustan Cp y S
+$    mejor que un polinomio. Se escriben con la funcion GEIN integrada
+$    de Thermo-Calc,  GEIN(theta) = 1.5*R*theta + 3*R*T*LN(1-EXP(-theta/T)),
+$    documentada en el Database Manager User Guide.
+$
+$ 2. LIQUIDO CaO. [1] describe CaO(liq) con el modelo de dos estados
+$    (two-state), que en Thermo-Calc es propiedad de la FASE COMPLETA y
+$    por tanto no puede coexistir con SrO(liq) polinomial dentro de la
+$    misma fase de asociados. Se reajusto a forma SGTE clasica imponiendo
+$    como restricciones exactas Tm = 3222 K y dHfus = 80.924 kJ/mol.
+$    Reproduce la curva two-state con rms 186 J/mol en 1000-5000 K y
+$    mantiene G(liq) - G(cryst) > 0 hasta 298 K (sin reestabilizacion).
+$    Cp(liq) = 82.8 J/mol/K en Tm (estimacion de Gurvich: 84 +- 10).
+$    Contrapartida: se pierde la transicion vitrea, o sea el CaO liquido
+$    METAESTABLE por debajo de ~1500 K ya no reproduce el aumento de Cp
+$    al enfriar. Irrelevante para equilibrios de escoria.
+$
+$ 3. LIQUIDO Sr-O. [2] usa el liquido ionico de dos subredes
+$    (Sr+2)2(Va-2,O-2)2 con mezcla IDEAL y un solo cation. Ese caso es
+$    matematicamente identico a una solucion ideal de asociados
+$    {Sr, SrO} (y_Va = x_Sr, y_O-2 = x_SrO), asi que la conversion es
+$    algebraica, no requiere reoptimizacion, y L(LIQUID,SR,SRO) = 0
+$    exactamente.
+$
+$ 4. CORRECCION A [2]. El coeficiente de T*LN(T) de GSROCR es 47.56, NO
+$    47.36. Con 47.36 la funcion da S(298.15) = 52.27 y dfH = -592.20
+$    kJ/mol; con 47.56 da 53.61 y -592.14, que son los valores que el
+$    propio paper reporta en sus Tablas 2 y 3 (53.58 y -592.15).
+$    Verificado contra el PDF original.
+$
+$ 5. PARAMETROS ESTIMADOS, NO MEDIDOS -> tratar con cautela:
+$      L(LIQUID,CAO,SRO;0) = 25000
+$        De [3] Tabla VI: L(liq,Sr+2,Ca+2:O-2) = 50000 J por mol de
+$        unidad de formula del liquido ionico (Sr,Ca)2O2, o sea 2
+$        unidades de oxido -> 25000 J/mol de oxido en asociados. Los
+$        propios autores de [3] declaran que el comportamiento de mezcla
+$        del liquido SrO-CaO es DESCONOCIDO y usaron ese valor como
+$        parametro de ajuste de temperaturas de fusion en el cuaternario.
+$      L(LIQUID,SRO,O;0) = +30*T
+$        Copiado por analogia del valor de Ca-O [1], que a su vez viene
+$        de Liang et al. No hay dato experimental en Sr-O; de hecho [2]
+$        no extiende el liquido mas alla de la composicion SrO.
+$      No hay parametros cruzados L(LIQUID,CA,SRO) ni L(LIQUID,SR,CAO):
+$      no existe informacion y se dejan en cero por defecto.
+$
+$ 6. FASE GAS. Incluida SOLO con O2, suficiente para fijar pO2 y calcular
+$    los limites de estabilidad de CaO2 y SrO2 (en la region rica en
+$    oxigeno donde ocurre la descomposicion, [1] verifica que O2 domina y
+$    que cualquier otra especie esta por debajo de 1e-29 atm). Para
+$    vaporizacion a alta temperatura FALTAN Ca(g), Ca2(g), O(g), O3(g),
+$    Sr(g), Sr2(g), Sr2O(g), CaO(g), SrO(g): vienen de SSUB y NO estan.
+$    Para el liquidus Ca-CaO a 1 bar, suspender GAS (como hace [1]).
+$
+$ 7. Los metales fcc y bcc no disuelven oxigeno, consistente con [1] y
+$    [2]. Ca y Sr forman soluciones solidas completas en ambos [5].
+$
+$ 8. Rango de validez efectivo: 298.15 a 3000 K, limitado por las
+$    funciones de Sr y SrO. Las de Ca-O llegan a 6000 K.
+$ ==========================================================================
+
+ ELEMENT /-  ELECTRON_GAS        0.0000E+00  0.0000E+00  0.0000E+00 !
+ ELEMENT VA  VACUUM              0.0000E+00  0.0000E+00  0.0000E+00 !
+ ELEMENT CA  FCC_A1              4.0078E+01  6.1965E+03  4.1589E+01 !
+ ELEMENT O   1/2_MOLE_O2(GAS)    1.5999E+01  4.3410E+03  1.0252E+02 !
+ ELEMENT SR  FCC_A1              8.7620E+01  0.0000E+00  0.0000E+00 !
+
+ SPECIES CAO   CA1O1 !
+ SPECIES SRO   SR1O1 !
+ SPECIES O2    O2 !
+
+$ ==========================================================================
+$ FUNCIONES UNARIAS SGTE (copiadas literalmente de PURE5, ver [6])
+$ ==========================================================================
+
+ FUNCTION GHSERCA 298.15  -4955.062+72.794266*T-16.3138*T*LN(T)
+   -11.10455E-3*T**2-133574*T**(-1);                        1115.00 Y
+   -107304.428+799.982066*T-114.2922467*T*LN(T)
+   +23.733814E-3*T**2-1.2438E-6*T**3+18245540*T**(-1);      3000.00 Y
+   -3703.12+192.63995*T-35.0*T*LN(T);                       3001.00 N !
+
+ FUNCTION GLIQCA  298.15  +5844.846+62.4838*T-16.3138*T*LN(T)
+   -11.10455E-3*T**2-133574*T**(-1);                         500.00 Y
+   +7838.856+18.2979*T-8.9874787*T*LN(T)
+   -22.66537E-3*T**2+3.338303E-6*T**3-230193*T**(-1);       1115.00 Y
+   -2654.938+188.9223*T-35*T*LN(T);                         3001.00 N !
+
+ FUNCTION GBCCCA  298.15  -7020.852+142.970155*T-28.2541*T*LN(T)
+   +7.2326E-3*T**2-4.500217E-6*T**3+60578*T**(-1);           716.00 Y
+   +1640.475+1.999694*T-6.276*T*LN(T)
+   -16.1921E-3*T**2-523000*T**(-1);                         1115.00 Y
+   -142331.096+1023.549046*T-143.8726979*T*LN(T)
+   +32.543127E-3*T**2-1.704079E-6*T**3+25353771*T**(-1);    3000.00 Y
+   +321.63+189.433057*T-35*T*LN(T);                         3001.00 N !
+
+ FUNCTION GHSERSR 298.15  -7532.367+107.183879*T-23.905*T*LN(T)
+   -4.61225E-3*T**2-0.167477E-6*T**3-2055*T**(-1);           820.00 Y
+   -13380.102+153.196104*T-30.0905432*T*LN(T)
+   -3.251266E-3*T**2+0.184189E-6*T**3+850134*T**(-1);       3000.00 N !
+
+ FUNCTION GLIQSR  298.15  +2194.997-10.118994*T-5.0668978*T*LN(T)
+   -31.840595E-3*T**2+4.981237E-6*T**3-265559*T**(-1);      1050.00 Y
+   -10855.29+213.406219*T-39.463*T*LN(T);                   3000.00 N !
+
+ FUNCTION GBCCSR  298.15  -6779.234+116.583654*T-25.6708365*T*LN(T)
+   -3.126762E-3*T**2+0.22965E-6*T**3+27649*T**(-1);          820.00 Y
+   -6970.594+122.067301*T-26.57*T*LN(T)
+   -1.9493E-3*T**2-0.017895E-6*T**3+16495*T**(-1);          1050.00 Y
+   +8168.357+0.423037*T-9.7788593*T*LN(T)
+   -9.539908E-3*T**2+0.520221E-6*T**3-2414794*T**(-1);      3000.00 N !
+
+ FUNCTION GHSEROO 298.15  -3480.87-25.503038*T-11.1355*T*LN(T)
+   -5.098875E-3*T**2+0.661845833E-6*T**3-38365*T**(-1);     1000.00 Y
+   -6568.763+12.659879*T-16.8138*T*LN(T)
+   -0.5957975E-3*T**2+0.006781E-6*T**3+262905*T**(-1);      3300.00 Y
+   -13986.728+31.259624*T-18.9536*T*LN(T)
+   -0.425243E-3*T**2+0.010721E-6*T**3+4383200*T**(-1);      6000.00 N !
+
+ FUNCTION GLIQOO  298.15  +GHSEROO#-2648.9+31.44*T;         6000.00 N !
+
+$ ==========================================================================
+$ CaO CRISTALINO  -  [1] Tabla 1
+$
+$ Rama baja (Ec. 8, tres temperaturas de Einstein):
+$   G = E0 + SUM(ai*GEIN(ti)) - (a/2)*T**2 - EXP(b+c*T)/c**2
+$   E0 = -652134.4
+$   a1 = 1.142993  t1 = 369.447
+$   a2 = 0.62542   t2 = 601.229
+$   a3 = 0.218718  t3 = 188.291
+$   a  = 0.00364916 -> a/2 = 0.00182458
+$   b  = -15.0586   c = 0.00304142 -> 1/c**2 = 108105.354444
+$
+$ Rama alta (Ec. 10 de [1]), amortiguamiento de Cp para evitar que el
+$ solido se reestabilice a muy alta temperatura. La forma original
+$   G = H' - S'*T + A*T*(1-LN(T)) + 1/(2*C**2*(B+C*T))
+$   H' = -731248.3  S' = -492.1078  A = 81.5229
+$   B  = -191.395   C  = 0.06241502 -> 1/(2*C**2) = 128.348789
+$ NO SE PUEDE ESCRIBIR en un TDB: el parser rechaza la division por una
+$ expresion, y tambien el parentesis de T*(1-LN(T)). Se reajusto a forma
+$ SGTE clasica sobre 3222-6000 K imponiendo continuidad EXACTA de G y de
+$ S en 3222 K. Desviacion frente a la Ec. 10: maximo 14.8 J/mol, rms 8.2.
+$ Cp resultante entre 80.9 y 82.2 J/mol/K, y el solido no se reestabiliza
+$ frente al liquido en ningun punto de 3222 a 6000 K.
+$
+$ Verificado: S(298.15) = 40.354 (paper 40.35), Cp(298.15) = 42.730
+$ (42.73), dfH(298.15) = -634.601 kJ/mol (-634.6). Las dos ramas empalman
+$ con un salto de 2 J/mol en G, atribuible al redondeo de [1].
+$
+$ IMPORTANTE - por que esto va partido en funciones auxiliares:
+$ El lector de TDB de Thermo-Calc aborta con
+$     ERROR 1261 IN GZCFUN: MISSING ) AFTER A LOG, EXP, GEIN or ECEIN
+$ si una sola expresion acumula varias llamadas a funcion unaria. Con las
+$ tres GEIN y la EXP juntas en un mismo termino, el analizador corta la
+$ expresion a 78 caracteres y se queda con un GEIN( sin cerrar. Poniendo
+$ una llamada por funcion el problema desaparece. El resultado numerico es
+$ identico: GCAOE1+GCAOE2+GCAOE3 es la misma suma de Einstein.
+$ ==========================================================================
+
+$ El termino anarmonico se factoriza:  exp(b+c*T) = exp(b)*exp(c*T).
+$ -108105.354444*exp(-15.0586) = -3.1187482541E-02
+$ Comprobado: a 3222 K las dos formas dan -562.120801 J/mol.
+
+ FUNCTION GCAOE1  298.15  +1.142993*GEIN(369.447);          6000.00 N !
+ FUNCTION GCAOE2  298.15  +0.62542*GEIN(601.229);           6000.00 N !
+ FUNCTION GCAOE3  298.15  +0.218718*GEIN(188.291);          6000.00 N !
+ FUNCTION GCAOANH 298.15  -3.1187482541E-02*EXP(0.00304142*T);
+                                                            6000.00 N !
+
+ FUNCTION GCAOCR  298.15  -652134.4+GCAOE1#+GCAOE2#+GCAOE3#
+   -0.00182458*T**2+GCAOANH#;                              3222.00 Y
+   -726686.2348+556.326025*T-79.464890*T*LN(T)
+   -2.269506E-04*T**2;                                     6000.00 N !
+
+$ ==========================================================================
+$ CaO LIQUIDO  -  reajuste de este trabajo (ver NOTA 2)
+$ Restricciones exactas: Tm = 3221.99 K, dHfus = 80.924 kJ/mol
+$ Cp(liq) = 84.371 - 4.748E-04*T  ->  82.8 J/mol/K en Tm
+$ ==========================================================================
+
+ FUNCTION GCAOLIQ 298.15  -656748.5662+572.751716*T
+   -84.370735*T*LN(T)+2.374069E-04*T**2;                   6000.00 N !
+
+$ ==========================================================================
+$ CaO2 CRISTALINO  -  [1] Tabla 1, Ec. 8, sin terminos a, b, c
+$   E0 = -676359.7
+$   a1 = 2.04814  t1 = 398.195
+$   a2 = 0.45973  t2 = 184.418
+$   a3 = 0.56518  t3 = 954.326
+$ Verificado: S(298.15) = 59.600 (paper 59.60), Cp(298.15) = 61.627
+$ (61.63), dfH(298.15) = -648.103 kJ/mol (-648.1)
+$ ==========================================================================
+
+$ Partida en auxiliares por el mismo motivo que GCAOCR (ver arriba).
+
+ FUNCTION GCO2E1  298.15  +2.04814*GEIN(398.195);           6000.00 N !
+ FUNCTION GCO2E2  298.15  +0.45973*GEIN(184.418);           6000.00 N !
+ FUNCTION GCO2E3  298.15  +0.56518*GEIN(954.326);           6000.00 N !
+
+ FUNCTION GCAO2CR 298.15  -676359.7+GCO2E1#+GCO2E2#+GCO2E3#;
+                                                            6000.00 N !
+
+$ ==========================================================================
+$ SrO y SrO2  -  [2] Tabla 5  (coeficiente corregido 47.56, ver NOTA 4)
+$ Verificado: S(298.15) = 53.606 (paper 53.58), dfH = -592.143 kJ/mol
+$ (-592.15), Tm = 2870.45 K (2870), dHfus = 89.408 kJ/mol (89.41),
+$ Cp(liq) = 73.12 (73.1), dfH(SrO2) = -635.88 kJ/mol (-636)
+$ ==========================================================================
+
+ FUNCTION GSROCR  298.15  -607870+268.9*T-47.56*T*LN(T)
+   -0.00307*T**2+190000*T**(-1);                           3000.00 N !
+
+ FUNCTION GSROLIQ 298.15  -566346+449.0*T-73.1*T*LN(T);    6000.00 N !
+
+ FUNCTION GSRO2CR 298.15  +GSROCR#+GHSEROO#-43740+70*T;    3000.00 N !
+
+ TYPE_DEFINITION % SEQ *!
+ DEFINE_SYSTEM_DEFAULT ELEMENT 2 !
+ DEFAULT_COMMAND DEF_SYS_ELEMENT VA /- !
+
+$ ==========================================================================
+$ FASE LIQUIDA - MODELO DE ASOCIADOS
+$ ==========================================================================
+
+ PHASE LIQUID:L % 1 1.0 !
+ CONSTITUENT LIQUID:L :CA,CAO,O,SR,SRO: !
+
+ PARAMETER G(LIQUID,CA;0)  298.15 +GLIQCA#;       3001.00 N REF6 !
+ PARAMETER G(LIQUID,SR;0)  298.15 +GLIQSR#;       3000.00 N REF6 !
+ PARAMETER G(LIQUID,O;0)   298.15 +GLIQOO#;       6000.00 N REF6 !
+ PARAMETER G(LIQUID,CAO;0) 298.15 +GCAOLIQ#;      6000.00 N REF1 !
+ PARAMETER G(LIQUID,SRO;0) 298.15 +GSROLIQ#;      6000.00 N REF2 !
+
+$ Ca-CaO: version aceptada de [1], ajustada a las solubilidades de
+$ Fischbach. Alternativa de [1] con las actividades de Zaitsev: +9284
+ PARAMETER L(LIQUID,CA,CAO;0)  298.15 -9625+12.30*T;
+                                                 6000.00 N REF1 !
+
+$ CaO-O: [1], tomado a su vez de Liang et al.
+ PARAMETER L(LIQUID,CAO,O;0)   298.15 +30*T;      6000.00 N REF1 !
+
+$ Sr-SrO: EXACTAMENTE cero. El liquido ionico de [2] es ideal (NOTA 3).
+ PARAMETER L(LIQUID,SR,SRO;0)  298.15 +0.0;       6000.00 N REF2 !
+
+$ SrO-O: estimado por analogia con Ca-O (ver NOTA 5).
+ PARAMETER L(LIQUID,SRO,O;0)   298.15 +30*T;      6000.00 N REF7 !
+
+$ CaO-SrO: de [3] Tabla VI, convertido de liquido ionico a asociados.
+$ PARAMETRO DE AJUSTE, NO DATO EXPERIMENTAL (ver NOTA 5).
+ PARAMETER L(LIQUID,CAO,SRO;0) 298.15 +25000;     6000.00 N REF3 !
+
+$ Ca-Sr metalico: [5], columna de modelo de solucion aleatoria.
+ PARAMETER L(LIQUID,CA,SR;0)   298.15 +1682+0.59*T;
+                                                 3000.00 N REF5 !
+ PARAMETER L(LIQUID,CA,SR;1)   298.15 +521.05+0.052*T;
+                                                 3000.00 N REF5 !
+ PARAMETER L(LIQUID,CA,SR;2)   298.15 -900;       3000.00 N REF5 !
+
+$ ==========================================================================
+$ HALITA (Ca,Sr)O  -  solucion solida continua tipo sal de roca, con
+$ laguna de miscibilidad a baja temperatura.
+$
+$ Parametros de exceso de [3] Tabla VI (fase 1x0):
+$     L = 23000 - 3*T + 1185*(y_Ca - y_Sr)
+$ Alternativa derivada en este trabajo desde los datos de [4] (forma
+$ subregular de Hardy convertida a Redlich-Kister):
+$     L0 = 25977.5 - 5.58*T    L1 = 1062.5 - 0.24*T
+$ Los dos juegos coinciden dentro del 0.7 % a 1100 K (19700 vs 19840).
+$ Se adopta el de [3] por ser el parametro CALPHAD publicado y evaluado.
+$ Laguna experimental a 1100 K [4]: x_SrO = 0.24 y 0.71.
+$ ==========================================================================
+
+ PHASE HALITE % 2 1 1 !
+ CONSTITUENT HALITE :CA,SR : O: !
+
+ PARAMETER G(HALITE,CA:O;0)    298.15 +GCAOCR#;   6000.00 N REF1 !
+ PARAMETER G(HALITE,SR:O;0)    298.15 +GSROCR#;   3000.00 N REF2 !
+ PARAMETER L(HALITE,CA,SR:O;0) 298.15 +23000-3*T;
+                                                 3000.00 N REF3 !
+ PARAMETER L(HALITE,CA,SR:O;1) 298.15 +1185;      3000.00 N REF3 !
+
+$ ==========================================================================
+$ PEROXIDOS ESTEQUIOMETRICOS
+$ ==========================================================================
+
+ PHASE CAO2 % 2 1 2 !
+ CONSTITUENT CAO2 :CA : O: !
+ PARAMETER G(CAO2,CA:O;0)      298.15 +GCAO2CR#;  6000.00 N REF1 !
+
+ PHASE SRO2 % 2 1 2 !
+ CONSTITUENT SRO2 :SR : O: !
+ PARAMETER G(SRO2,SR:O;0)      298.15 +GSRO2CR#;  3000.00 N REF2 !
+
+$ ==========================================================================
+$ METALES  -  Ca y Sr forman soluciones solidas completas en fcc y bcc [5]
+$ Parametros de [5], columna de solucion aleatoria (J/mol de atomos)
+$ ==========================================================================
+
+ PHASE FCC_A1 % 2 1 1 !
+ CONSTITUENT FCC_A1 :CA,SR : VA: !
+ PARAMETER G(FCC_A1,CA:VA;0)   298.15 +GHSERCA#;  3001.00 N REF6 !
+ PARAMETER G(FCC_A1,SR:VA;0)   298.15 +GHSERSR#;  3000.00 N REF6 !
+ PARAMETER L(FCC_A1,CA,SR:VA;0) 298.15 +3770.03+0.11*T;
+                                                 3000.00 N REF5 !
+
+ PHASE BCC_A2 % 2 1 3 !
+ CONSTITUENT BCC_A2 :CA,SR : VA: !
+ PARAMETER G(BCC_A2,CA:VA;0)   298.15 +GBCCCA#;   3001.00 N REF6 !
+ PARAMETER G(BCC_A2,SR:VA;0)   298.15 +GBCCSR#;   3000.00 N REF6 !
+ PARAMETER L(BCC_A2,CA,SR:VA;0) 298.15 +3770.03+0.01*T;
+                                                 3000.00 N REF5 !
+
+$ ==========================================================================
+$ GAS  -  SOLO O2 (ver NOTA 6). Incompleta a proposito.
+$ ==========================================================================
+
+ PHASE GAS:G % 1 1.0 !
+ CONSTITUENT GAS:G :O2: !
+ PARAMETER G(GAS,O2;0) 298.15 +2*GHSEROO#+R*T*LN(1.0E-05*P);
+                                                 6000.00 N REF6 !
+
+$ ==========================================================================
+
+$ Jacob, Jayadevan, J Phase Equilibria 21(4) (2000) 350-356 es la fuente de
+$ los datos experimentales de la laguna usados en CaSrO.POP, no de ningun
+$ parametro de esta base. Por eso no figura en la lista de referencias.
+ LIST_OF_REFERENCES
+ NUMBER  SOURCE
+  REF1 'Deffrennes et al., Calphad 69 (2020) 101764'
+  REF2 'Risold, Hallstedt, Gauckler, Calphad 20(3) (1996) 353-361'
+  REF3 'Risold et al., J Am Ceram Soc 80(3) (1997) 537-548, Tabla VI'
+  REF5 'Aljarrah, Medraj, Calphad 32 (2008) 240-251'
+  REF6 'Dinsdale, Calphad 15(4) (1991) 317-425 (SGTE PURE5)'
+  REF7 'Estimado en este trabajo por analogia con Ca-O'
+ !

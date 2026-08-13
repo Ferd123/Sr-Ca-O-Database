@@ -1,0 +1,14 @@
+ID,T_K,P_Pa,x_SrO_Halite,y_Sr2PbO4_Orthorhombic,Note
+TL-01,1100,101325,0.006,0.088,Continuous solid solution
+TL-02,1100,101325,0.013,0.344,Continuous solid solution
+TL-03,1100,101325,0.015,0.504,Continuous solid solution
+TL-04,1100,101325,0.018,0.653,Continuous solid solution
+TL-05,1100,101325,0.024,0.773,Continuous solid solution
+TL-06,1100,101325,0.046,0.889,Continuous solid solution
+TL-07,1100,101325,0.073,0.926,Continuous solid solution
+TL-08,1100,101325,0.121,0.948,Continuous solid solution
+TL-09,1100,101325,0.174,0.957,Continuous solid solution
+TL-10,1100,101325,0.240,0.961,Miscibility gap boundary Ca-rich
+TL-11,1100,101325,0.712,0.961,Miscibility gap boundary Sr-rich
+TL-12,1100,101325,0.805,0.966,Continuous solid solution
+TL-13,1100,101325,0.914,0.980,Continuous solid solution

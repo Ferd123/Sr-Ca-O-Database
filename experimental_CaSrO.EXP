@@ -1,0 +1,96 @@
+$ ==========================================================================
+$ experimental_CaSrO.EXP  -  datos experimentales en formato DATAPLOT
+$ Para superponer sobre los diagramas calculados con CaSrO.TDB.
+$ Se usa con el macro comparar_experimental.TCM
+$ ==========================================================================
+$
+$ PROCEDENCIA DE CADA CONJUNTO
+$
+$ Datasets 1-4  (liquidus Ca-CaO, ejes X = at.% O, Y = T en K)
+$   Digitalizados en este trabajo de la Figura 3 de Deffrennes et al.,
+$   Calphad 69 (2020) 101764. Incertidumbre de lectura: +-0.3 at.% y +-10 K.
+$   Los datasets 3 y 4 son los que el propio Deffrennes DESCARTA; se
+$   incluyen sólo para que se vea por qué.
+$
+$ Dataset 5  (laguna de la halita, ejes X = x(Sr), Y = T en K)
+$   Jacob y Jayadevan, J. Phase Equilibria 21(4) (2000) 350-356, texto y
+$   Tabla 1: x_SrO = 0.240 y 0.712 a 1100 K. Convertido al corte
+$   pseudobinario del macro, donde x(Sr) = x_SrO / 2.
+$
+$ Dataset 6  (entalpia de mezcla de la halita, X = x(Sr), Y = J/mol)
+$   Flidlider et al. (1966) via la Figura 3 de Risold et al. 1997.
+$   SIN VERIFICAR contra el original: son valores digitalizados de una
+$   figura por un tercero. Tratar como orientativos.
+$
+$ ADVERTENCIA
+$   Los valores de liquidus Ca-CaO y de dfG(SrO) que aparecen en
+$   datos_experimentales_parrot.md y en ca_o_liquidus_solubility.csv NO se
+$   usan aqui: estan equivocados. El liquidus daba 0.99 at.%O a 1165 K,
+$   por debajo de la composicion del eutectico (1.70 at.%O a 1094.6 K), lo
+$   cual es termodinamicamente imposible; parece que mezclaron los puntos
+$   descartados de Zaitsev con la etiqueta de Fischbach. Los de dfG(SrO)
+$   estaban unos 26 kJ/mol demasiado negativos.
+$ ==========================================================================
+
+
+$ --- 1. Fischbach (85Fis), analisis termico diferencial. ACEPTADOS por [1]
+DATASET 1 Fischbach DTA
+ 2.50 1280 S1
+ 2.60 1283 S1
+ 2.90 1307 S1
+ 3.15 1372 S1
+ 3.25 1376 S1
+ 4.20 1575 S1
+
+$ --- 2. Fischbach (85Fis), analisis quimico. ACEPTADOS por [1]
+DATASET 2 Fischbach analisis quimico
+ 2.60 1232 S2
+ 2.80 1283 S2
+ 3.30 1472 S2
+ 3.90 1470 S2
+ 5.80 1710 S2
+ 6.20 1710 S2
+
+$ --- 3. Zaitsev (01Zai), solubilidad reportada. DESCARTADOS por [1]
+$ Se desvian cada vez mas al subir la temperatura; [1] concluye que o no
+$ son medidas reales o sobreestiman por arrastre de CaO sin disolver.
+DATASET 3 Zaitsev solubilidad (descartados)
+ 1.50 1165 S3
+ 1.80 1212 S3
+ 2.10 1258 S3
+ 2.20 1298 S3
+ 2.60 1330 S3
+ 3.00 1370 S3
+ 3.40 1400 S3
+ 3.80 1435 S3
+ 4.35 1487 S3
+ 5.05 1540 S3
+ 5.20 1522 S3
+ 6.10 1645 S3
+ 6.50 1600 S3
+ 6.90 1622 S3
+ 7.40 1672 S3
+ 8.20 1672 S3
+ 8.80 1700 S3
+ 9.40 1723 S3
+
+$ --- 4. Bevan (59Bev), estimacion visual. DESCARTADO por [1]
+$ Tres veces mayor que cualquier medida directa.
+DATASET 4 Bevan estimacion visual (descartado)
+ 14.10 1523 S4
+
+$ --- 5. Jacob (2000), laguna de miscibilidad de la halita a 1100 K
+$ x_SrO = 0.240 y 0.712  ->  x(Sr) = 0.120 y 0.356 en el corte x(O)=0.5
+DATASET 5 Jacob laguna halita 1100 K
+ 0.120 1100 S5
+ 0.356 1100 S5
+
+$ --- 6. Flidlider (1966), entalpia de mezcla de la halita a 298 K
+$ x_SrO -> x(Sr) = x_SrO/2 ; entalpia en J/mol
+$ SIN VERIFICAR (ver encabezado)
+DATASET 6 Flidlider entalpia de mezcla halita
+ 0.050 1800 S6
+ 0.125 3700 S6
+ 0.250 5000 S6
+ 0.375 3600 S6
+ 0.450 1600 S6

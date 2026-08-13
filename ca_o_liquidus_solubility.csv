@@ -1,0 +1,9 @@
+T_K,x_CaO_mol_pct,x_O_at_frac,Reference,Method
+1165,1.0,0.0099,Zaitsev (1998),Vapor pressure
+1233,1.2,0.0119,Fischbach (1985),DTA
+1350,2.1,0.0206,Fischbach (1985),Chemical Analysis
+1450,3.2,0.0310,Fischbach (1985),Chemical Analysis
+1550,4.8,0.0458,Fischbach (1985),Chemical Analysis
+1650,7.2,0.0672,Fischbach (1985),DTA
+1705,9.1,0.0834,Fischbach (1985),DTA
+1723,10.5,0.0950,Zaitsev (1998),Induction Bound Plasma
