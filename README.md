@@ -400,6 +400,10 @@ the conversion in section 4.3.
 | Database, data, figures, this README | [CC BY 4.0](LICENSE-DATA.md) |
 | Macros (`*.TCM`, `*.POP`) | [MIT](LICENSE) |
 
+GitHub labels the repository "MIT" because that is what the `LICENSE` file holds,
+but **MIT covers only the macros**. The database itself, the data and the figures are
+CC BY 4.0 — see [`LICENSE-DATA.md`](LICENSE-DATA.md), which lists them file by file.
+
 Citation metadata is in [`CITATION.cff`](CITATION.cff); GitHub generates the *Cite this
 repository* button from it.
 
