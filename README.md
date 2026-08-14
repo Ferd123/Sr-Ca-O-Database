@@ -21,7 +21,8 @@ License: CC BY 4.0 (database and data) / MIT (code). See section 10.
 | `validar_CaSrO.TCM` | Console Mode macro, 7 blocks (see below). |
 | `CaSrO.POP`, `optimizar_CaSrO_PARROT.TCM` | Optimization with PARROT. |
 | `experimental_CaSrO.EXP` | Experimental data digitized from the literature, with the provenance of each dataset in the header. |
-| `*.csv` | Tabulated experimental points and the calculated diagrams in CSV. |
+| `ca_o_liquidus_solubility.csv`, `halite_tielines_1100K.csv` | Experimental points from the literature, tabulated. |
+| `diagrama_CaSrO.csv`, `diagrama_CaSrO_completo.csv` | The `.exp` files turned into plottable data: the same calculated boundaries, as plain columns of `boundary, phases, X(SR), T` instead of DATAPLOT blocks. Feed them to any plotting tool without parsing DATAPLOT. |
 | `dos.exp`, `diagrama tc.exp` | **Calculated** diagrams, exported from Console Mode in DATAPLOT format. These are results, not experimental data. |
 | `*.png` | Validation figures: the model against the experimental data. |
 
