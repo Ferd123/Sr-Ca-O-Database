@@ -46,26 +46,12 @@
 !dos.exp
 !diagrama tc.exp
 
-# --- Own scripts -------------------------------------------------------------
-!actividad_CaO_SrO.py
-!anadir_laguna.py
-!comparar_bases.py
-!liquidus_CaO_SrO.py
-!exportar_diagrama.py
-!plot_beautiful_CaSrO.py
-!plot_beautiful_CaSrO_CaO.py
-!plot_dG_halita.py
-!plot_full_CaSrO_diagram.py
-!plot_optimized_CaSrO_diagram.py
-!plot_optimized_results.py
-
-# --- Figures produced by those scripts ---------------------------------------
-!actividad_raoult_henry.png
-!comparacion_bases.png
-!dG_halita_laguna.png
+# --- Validation figures ------------------------------------------------------
+# Only the ones that put the model against experimental data. The parameter
+# sensitivity studies and the mechanism sketches stay out, along with the
+# Python that generated all of them.
 !diagrama_CaSrO_completo.png
 !diagrama_CaSrO_optimizado.png
-!liquidus_comparacion.png
 !resultado_optimizacion_CaSrO.png
 
 # --- Tabulated results -------------------------------------------------------

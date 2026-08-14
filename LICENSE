@@ -1,5 +1,5 @@
-The code files in this repository (*.py, *.TCM, *.POP) are distributed under
-the MIT license that follows.
+The macro files in this repository (*.TCM, *.POP) are distributed under the MIT
+license that follows.
 
 The database and the data (CaSrO.TDB, CaSrO_opt.tdb, CaSrO_opt_liq.tdb, *.csv,
 *.exp, *.EXP, the figures and the README) are distributed under Creative

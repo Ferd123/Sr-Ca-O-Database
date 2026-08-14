@@ -15,7 +15,7 @@ you made changes.
 Full legal text: <https://creativecommons.org/licenses/by/4.0/legalcode>
 Summary: <https://creativecommons.org/licenses/by/4.0/>
 
-The code (`*.py`, `*.TCM`, `*.POP`) is under the MIT license; see `LICENSE`.
+The macros (`*.TCM`, `*.POP`) are under the MIT license; see `LICENSE`.
 
 ---
 

@@ -23,13 +23,17 @@ License: CC BY 4.0 (database and data) / MIT (code). See section 10.
 | `experimental_CaSrO.EXP` | Experimental data digitized from the literature, with the provenance of each dataset in the header. |
 | `*.csv` | Tabulated experimental points and the calculated diagrams in CSV. |
 | `dos.exp`, `diagrama tc.exp` | **Calculated** diagrams, exported from Console Mode in DATAPLOT format. These are results, not experimental data. |
-| `*.py` | Assessment and figure scripts. |
+| `*.png` | Validation figures: the model against the experimental data. |
 
 The two calculated `.exp` files correspond to the two configurations of section 7:
 `diagrama tc.exp` comes from the run with all 7 phases active (`LIQUID`, `HALITE#1/#2`,
 `FCC_A1`, `BCC_A2`, `SRO2` appear), and `dos.exp` from the pseudobinary section with
-everything suspended except liquid and halite (only `LIQUID` and `HALITE#1/#2`). The
-plotting scripts read `dos.exp`.
+everything suspended except liquid and halite (only `LIQUID` and `HALITE#1/#2`).
+
+The database is at the root of the repository. The macros call it by bare name
+(`sw user CaSrO.TDB`), since `SWITCH_DATABASE` in Console Mode does not take quoted
+paths: set the working directory to the repository folder before running them, or
+select the database by hand.
 
 The papers the parameters come from are **not** in the repository: they are under
 copyright. Full citations are in section 2 and in the `LIST_OF_REFERENCES` of the TDB
@@ -393,7 +397,7 @@ the conversion in section 4.3.
 | What | License |
 |---|---|
 | Database, data, figures, this README | [CC BY 4.0](LICENSE-DATA.md) |
-| Code (`*.py`, `*.TCM`, `*.POP`) | [MIT](LICENSE) |
+| Macros (`*.TCM`, `*.POP`) | [MIT](LICENSE) |
 
 Citation metadata is in [`CITATION.cff`](CITATION.cff); GitHub generates the *Cite this
 repository* button from it.
